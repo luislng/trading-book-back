@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TradingBook.Model.Asset
+namespace TradingBook.Model.Entity
 {
-    public record AssetDto
-    {
+    public class Asset : EntityBase
+    {    
         public string Name { get; set; } = String.Empty;
 
-        public string Code { get; set; } = String.Empty;        
+        public string Code { get; set; } = String.Empty;
     }
 }
