@@ -1,6 +1,4 @@
 ﻿using System.Net;
-using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
 using TradingBook.ExternalServices.Http.Abstract;
 
@@ -16,26 +14,33 @@ namespace TradingBook.ExternalServices.Http.Implementation
             }
         }
 
-        public async Task<T> Get<T>(Uri uri, IReadOnlyDictionary<string, string> parameters, IReadOnlyDictionary<string, string> headers)
+        public async Task<T> Get<T>(Uri uri, IReadOnlyDictionary<string, string> parameters = null, IReadOnlyDictionary<string, string> headers = null)
         {
             using HttpClient client = new HttpClient();
 
-            foreach(var headerAux in headers)
+            if (headers != null)
             {
-                client.DefaultRequestHeaders.Add(headerAux.Key, headerAux.Value);   
-            }
-
-            List<string> queryParametersCollection = new List<string>();
-
-            foreach (var parameterAux in parameters)
-            {
-                queryParametersCollection.Add($"{parameterAux.Key}={parameterAux.Value}");
+                foreach (var headerAux in headers)
+                {
+                    client.DefaultRequestHeaders.Add(headerAux.Key, headerAux.Value);
+                }
             }
 
             string queryParameter = String.Empty;
-            if(queryParametersCollection.Count > 0)
+
+            if(parameters != null)
             {
-                queryParameter = $"?{String.Join('&', queryParametersCollection)}";
+                List<string> queryParametersCollection = new List<string>();
+
+                foreach (var parameterAux in parameters)
+                {
+                    queryParametersCollection.Add($"{parameterAux.Key}={parameterAux.Value}");
+                }
+
+                if (queryParametersCollection.Count > 0)
+                {
+                    queryParameter = $"?{String.Join('&', queryParametersCollection)}";
+                }
             }
 
             string url = $"{uri.ToString()}{queryParameter}";

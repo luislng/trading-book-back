@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using TradingBook.ExternalServices.ExchangeProvider;
 using TradingBook.ExternalServices.ExchangeProvider.Abstract;
+using TradingBook.ExternalServices.ExchangeProvider.AlphaVantage.Implementation;
 using TradingBook.ExternalServices.ExchangeProvider.ApiExchange.Implementation;
 using TradingBook.ExternalServices.Http.Abstract;
 using TradingBook.ExternalServices.Http.Implementation;
@@ -11,7 +13,10 @@ namespace TradingBook.ExternalServices
         public static IServiceCollection AddExternalServices(this IServiceCollection services)
         {
             services.AddTransient<IHttpService, HttpService>();
-            services.AddTransient<ICurrencyExchangeService, CurrencyApiExchangeService>();         
+            services.AddMemoryCache();
+            services.AddTransient<ICurrencyExchangeService, CurrencyApiExchangeService>();
+            services.AddTransient<ICurrencyExchangeService, AlphaVantageExchangeService>();
+            services.AddTransient<ICurrencyExchangeServiceManager, ExchangeLoadBalancerProvider>();         
 
             return services;
         }

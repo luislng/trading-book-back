@@ -49,8 +49,8 @@ namespace TradingBook.ExternalServices.ExchangeProvider.ApiExchange.Implementati
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>();
 
-            string fromCurrencyHeader = GetConfigurationValue(ConfigurationKeys.PARAM_FROM_CURRENCY);
-            string toCurrencyHeader = GetConfigurationValue(ConfigurationKeys.PARAM_TO_CURRENCY);
+            string fromCurrencyHeader = GetConfigurationValue(ConfigurationKeysApiExchange.PARAM_FROM_CURRENCY);
+            string toCurrencyHeader = GetConfigurationValue(ConfigurationKeysApiExchange.PARAM_TO_CURRENCY);
 
             parameters.Add(fromCurrencyHeader, fromCurrency);
             parameters.Add(toCurrencyHeader, toCurrency);
@@ -62,8 +62,8 @@ namespace TradingBook.ExternalServices.ExchangeProvider.ApiExchange.Implementati
         {
             Dictionary<string, string> headers = new Dictionary<string, string>();
 
-            string apiKeyValue = GetConfigurationValue(ConfigurationKeys.API_KEY);
-            string headerApiKey = GetConfigurationValue(ConfigurationKeys.API_KEY_HEADER);
+            string apiKeyValue = GetConfigurationValue(ConfigurationKeysApiExchange.API_KEY_VALUE);
+            string headerApiKey = GetConfigurationValue(ConfigurationKeysApiExchange.API_KEY_HEADER);
 
             headers.Add(headerApiKey, apiKeyValue);
 
@@ -72,16 +72,13 @@ namespace TradingBook.ExternalServices.ExchangeProvider.ApiExchange.Implementati
 
         private Uri BuildUri()
         {
-            string uriValue = GetConfigurationValue(ConfigurationKeys.URI);
+            string uriValue = GetConfigurationValue(ConfigurationKeysApiExchange.URI);
 
             Uri uri = new Uri(uriValue);
+
             return uri;
         }
 
-        private string GetConfigurationValue(string key)
-        {
-            string value = _configuration[key] ?? throw new KeyNotFoundException(key);
-            return value;
-        }
+        private string GetConfigurationValue(string key) => _configuration[key] ?? throw new KeyNotFoundException(key);
     }
 }

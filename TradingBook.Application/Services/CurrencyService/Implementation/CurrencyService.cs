@@ -12,9 +12,9 @@ namespace TradingBook.Application.Services.CurrencyService.Implementation
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ICurrencyExchangeService _exchangeService;
+        private readonly ICurrencyExchangeServiceManager _exchangeService;
 
-        public CurrencyService(IUnitOfWork unitOfWork, IMapper mapper, ICurrencyExchangeService exchangeService)
+        public CurrencyService(IUnitOfWork unitOfWork, IMapper mapper, ICurrencyExchangeServiceManager exchangeService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(IUnitOfWork));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(IMapper));
