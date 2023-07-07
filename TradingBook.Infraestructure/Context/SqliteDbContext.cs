@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TradingBook.Model.Entity;
 
 namespace TradingBook.Infraestructure.Context
@@ -15,10 +10,13 @@ namespace TradingBook.Infraestructure.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ConfigureAssetModel();
+            modelBuilder.ConfigureCurrencyModel();
 
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<Asset> Assets { get; set; }
+        public DbSet<Asset> Asset { get; set; }
+
+        public DbSet<Currency> Currency { get; set; }
     }
 }

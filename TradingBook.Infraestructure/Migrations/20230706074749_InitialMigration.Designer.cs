@@ -10,7 +10,7 @@ using TradingBook.Infraestructure.Context;
 namespace TradingBook.Infraestructure.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20230627102941_InitialMigration")]
+    [Migration("20230706074749_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -27,15 +27,38 @@ namespace TradingBook.Infraestructure.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Assets");
+                    b.ToTable("Asset");
+                });
+
+            modelBuilder.Entity("TradingBook.Model.Entity.Currency", b =>
+                {
+                    b.Property<uint>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Currency");
                 });
 #pragma warning restore 612, 618
         }

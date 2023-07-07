@@ -11,10 +11,27 @@ namespace TradingBook.Infraestructure.Context
         {
             modelBuilder.Entity<Asset>()
                        .Property(x => x.Name)
+                       .IsRequired()
                        .HasMaxLength(MAX_LENGTH_ASSET_STRING);
 
             modelBuilder.Entity<Asset>()
                   .Property(x => x.Code)
+                  .IsRequired()
+                  .HasMaxLength(MAX_LENGTH_ASSET_STRING);
+
+            return modelBuilder;
+        }
+
+        public static ModelBuilder ConfigureCurrencyModel(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Currency>()
+                       .Property(x => x.Name)
+                       .IsRequired()
+                       .HasMaxLength(MAX_LENGTH_ASSET_STRING);
+
+            modelBuilder.Entity<Currency>()
+                  .Property(x => x.Code)
+                  .IsRequired()
                   .HasMaxLength(MAX_LENGTH_ASSET_STRING);
 
             return modelBuilder;

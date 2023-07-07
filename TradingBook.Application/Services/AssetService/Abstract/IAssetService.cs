@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingBook.Model.Asset;
 
-namespace TradingBook.Application.Services.Abstract
+namespace TradingBook.Application.Services.AssetService.Abstract
 {
     public interface IAssetService
     {

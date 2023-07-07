@@ -14,8 +14,7 @@ namespace TradingBook.Model.Invest
         public double Price { get; set; } = 0.0d;
         public CurrencyDto AssetCurrency { get; set; }  = new CurrencyDto();
         public DateTimeOffset AssetBuy { get; set; }
-        public double InvestAmount { get; set; } = 0.0d;
-        public CurrencyDto InvestCurrency { get; set; } = new CurrencyDto();
+        public double InvestAmount { get; set; } = 0.0d;        
         public double InvestFee { get; set; } = 0.0d;
         public double InvestDeposit { get; set; } = 0.0d;
         public double AssetCurrentPrice { get; set; } = 0.0d;
@@ -25,8 +24,7 @@ namespace TradingBook.Model.Invest
         public DateTimeOffset AssetReturn { get; set; }
         public double ReturnFee { get; set; } = 0.0d;
         public double ReturnTotal { get; set; } = 0.0d;
-        public double ReturnEarn { get; set; } = 0.0d;
-        public double ReturnDiffDepot { get; set; } = 0.0d;
+        public double ReturnEarn { get; set; } = 0.0d;        
         public double ReturnDiffAmount { get; set; } = 0.0d;
         public bool IsSelled { get; set; } = false;
         public string RecomendedAction { get; set; } = InvestActions.BUY;

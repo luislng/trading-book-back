@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TradingBook.ExternalServices\TradingBook.ExternalServices.csproj" />
     <ProjectReference Include="..\TradingBook.Infraestructure\TradingBook.Infraestructure.csproj" />
   </ItemGroup>
 

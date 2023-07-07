@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using TradingBook.Application.Services.Abstract;
+using TradingBook.Application.Services.AssetService.Abstract;
 using TradingBook.Model.Asset;
 
 namespace TradingBook.API.Controllers
@@ -20,7 +20,8 @@ namespace TradingBook.API.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(List<AssetDto>), 200)]
-        public IActionResult GetAssets()
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        public IActionResult GetAllAssets()
         {
             try
             {
@@ -34,6 +35,7 @@ namespace TradingBook.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(List<AssetDto>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public IActionResult SaveAsset([FromBody][Required]AssetDto asset)
         {
             try
@@ -50,6 +52,7 @@ namespace TradingBook.API.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public IActionResult DeleteAsset(uint id)
         {
             try

@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBook.API", "TradingB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBook.Model", "TradingBook.Model\TradingBook.Model.csproj", "{D87AD16B-DBB5-4324-B3FF-DECE7A410153}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingBook.Infraestructure", "TradingBook.Infraestructure\TradingBook.Infraestructure.csproj", "{DA5E057F-296B-4939-8C24-8A3D1423FF48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBook.Infraestructure", "TradingBook.Infraestructure\TradingBook.Infraestructure.csproj", "{DA5E057F-296B-4939-8C24-8A3D1423FF48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingBook.Application", "TradingBook.Application\TradingBook.Application.csproj", "{4D59DA7C-3541-4E80-ABF8-FB543CE6ACDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBook.Application", "TradingBook.Application\TradingBook.Application.csproj", "{4D59DA7C-3541-4E80-ABF8-FB543CE6ACDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingBook.ExternalServices", "TradingBook.ExternalServices\TradingBook.ExternalServices.csproj", "{7468B52D-6601-47F8-8D6B-8E32D9AE30D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{4D59DA7C-3541-4E80-ABF8-FB543CE6ACDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D59DA7C-3541-4E80-ABF8-FB543CE6ACDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D59DA7C-3541-4E80-ABF8-FB543CE6ACDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7468B52D-6601-47F8-8D6B-8E32D9AE30D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7468B52D-6601-47F8-8D6B-8E32D9AE30D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7468B52D-6601-47F8-8D6B-8E32D9AE30D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7468B52D-6601-47F8-8D6B-8E32D9AE30D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

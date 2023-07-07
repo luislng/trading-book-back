@@ -1,19 +1,19 @@
 ﻿using AutoMapper;
-using TradingBook.Application.Services.Abstract;
+using TradingBook.Application.Services.AssetService.Abstract;
 using TradingBook.Infraestructure.Repository.AssetRepository;
 using TradingBook.Infraestructure.UnitOfWork;
 using TradingBook.Model.Asset;
 using TradingBook.Model.Entity;
 
-namespace TradingBook.Application.Services.Implementation
+namespace TradingBook.Application.Services.AssetService.Implementation
 {
     internal class AssetService : IAssetService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public AssetService(IUnitOfWork unitOfWork, IMapper mapper) 
-        { 
+        public AssetService(IUnitOfWork unitOfWork, IMapper mapper)
+        {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(IUnitOfWork));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(IMapper));
         }
@@ -40,7 +40,7 @@ namespace TradingBook.Application.Services.Implementation
             List<AssetDto> assetDto = assets.Select(x => _mapper.Map<Asset, AssetDto>(x))
                                             .ToList();
 
-            return assetDto;    
+            return assetDto;
         }
 
         public AssetDto SaveAsset(AssetDto asset)
@@ -54,7 +54,7 @@ namespace TradingBook.Application.Services.Implementation
 
             _unitOfWork.SaveChanges();
 
-            assetDto.Id = assetEntity.Id;
+            assetDto.SetId(assetEntity.Id);
 
             return assetDto;
         }

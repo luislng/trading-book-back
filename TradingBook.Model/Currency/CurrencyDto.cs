@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TradingBook.Model.Currency
+﻿namespace TradingBook.Model.Currency
 {
     public record CurrencyDto
     {
+        public uint Id { get; internal set; }        
+
         public string Name { get; set; } = String.Empty;    
-        public string Code { get; set; } = String.Empty;    
+
+        public string Code { get; set; } = String.Empty;
+
+        public void SetId(in uint Id) => this.Id = Id;
     }
 }

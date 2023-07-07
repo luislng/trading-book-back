@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace TradingBook.Infraestructure.Repository
 {
-    public interface IRepositoryBase
-    {
-    }
+    public interface IRepositoryBase { }
 }

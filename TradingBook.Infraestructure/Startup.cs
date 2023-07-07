@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TradingBook.Infraestructure.Context;
 using TradingBook.Infraestructure.Repository.AssetRepository;
+using TradingBook.Infraestructure.Repository.CurrencyRepository;
 using TradingBook.Infraestructure.Repository.Factory;
 using TradingBook.Infraestructure.UnitOfWork;
 
@@ -18,10 +19,12 @@ namespace TradingBook.Infraestructure
                 ?? throw new NullReferenceException(nameof(CONNECTION_STRING_CONFIGURATION));
 
             services.AddDbContext<SqliteDbContext>(opt => opt.UseSqlite(connectionString));
-
-            services.AddTransient<IAssetRepository, AssetRepository>();
+                        
             services.AddTransient<IRepositoryFactory, RepositoryFactory>();
             services.AddScoped<IUnitOfWork, SqliteUnitOfWork>();
+
+            services.AddTransient<IAssetRepository, AssetRepository>();
+            services.AddTransient<ICurrencyRepository, CurrencyRepository>();
 
             return services;
         }

@@ -17,7 +17,7 @@ namespace TradingBook.Infraestructure.Repository.AssetRepository
 
         public void Add(Asset entity)
         {
-            _context.Assets.Add(entity);
+            _context.Asset.Add(entity);
         }
 
         public void Find(uint id)
@@ -27,12 +27,10 @@ namespace TradingBook.Infraestructure.Repository.AssetRepository
 
         public void Remove(uint id)
         {   
-            Asset assetForDelete = _context.Assets.FirstOrDefault(x => x.Id == id);
+            Asset assetForDelete = _context.Asset.Where(x => x.Id == id)
+                                                 .FirstOrDefault() ?? throw new KeyNotFoundException(nameof(Asset));
             
-            if (assetForDelete == null) 
-                throw new KeyNotFoundException(nameof(Asset));
-            
-            _context.Assets.Remove(assetForDelete);
+            _context.Asset.Remove(assetForDelete);
         }
 
         public void Update(uint id, Asset entity)
@@ -42,7 +40,7 @@ namespace TradingBook.Infraestructure.Repository.AssetRepository
 
         public List<Asset> GetAll()
         {
-            return _context.Assets.AsNoTracking().ToList();
+            return _context.Asset.AsNoTracking().ToList();
         }
     }
 }
