@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TradingBook.Application.Services.AssetService.Abstract;
-using TradingBook.Application.Services.AssetService.Implementation;
-using TradingBook.Application.Services.CurrencyService.Abstract;
-using TradingBook.Application.Services.CurrencyService.Implementation;
+using TradingBook.Application.Services.Currency.Abstract;
+using TradingBook.Application.Services.Currency.Implementation;
+using TradingBook.Application.Services.Stock.Abstract;
+using TradingBook.Application.Services.Stock.Implementation;
+using TradingBook.Application.Services.StockReference.Abstract;
+using TradingBook.Application.Services.StockReference.Implementation;
 using TradingBook.ExternalServices;
 
 namespace TradingBook.Application
@@ -14,8 +16,9 @@ namespace TradingBook.Application
             services.AddExternalServices();
 
             services.AddAutoMapper(typeof(Startup).Assembly);
-            services.AddScoped<IAssetService, AssetService>();
+            services.AddScoped<IStockReferenceService, StockReferenceService>();
             services.AddScoped<ICurrencyService, CurrencyService>();
+            services.AddScoped<IStockService, StockService>();
 
             return services;
         }

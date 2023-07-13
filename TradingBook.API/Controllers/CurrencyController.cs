@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using TradingBook.Application.Services.AssetService.Abstract;
-using TradingBook.Application.Services.CurrencyService.Abstract;
+using TradingBook.Application.Services.Currency.Abstract;
 using TradingBook.Model.Currency;
 
 namespace TradingBook.API.Controllers

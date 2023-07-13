@@ -2,6 +2,13 @@
 {
     public record CurrencyDto
     {
+        public CurrencyDto() { }
+
+        public CurrencyDto(uint id)
+        {
+           this.Id = id;   
+        }
+
         public uint Id { get; internal set; }        
 
         public string Name { get; set; } = String.Empty;    

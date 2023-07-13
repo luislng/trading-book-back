@@ -9,14 +9,17 @@ namespace TradingBook.Infraestructure.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ConfigureAssetModel();
+            modelBuilder.ConfigureStockReferenceModel();
             modelBuilder.ConfigureCurrencyModel();
+            modelBuilder.ConfigureStockModel();
 
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<Asset> Asset { get; set; }
+        public DbSet<CurrencyEntity> Currency { get; set; }
 
-        public DbSet<Currency> Currency { get; set; }
+        public DbSet<StockReferenceEntity> StockReference { get; set; }
+
+        public DbSet<StockEntity> Stock { get; set; }
     }
 }

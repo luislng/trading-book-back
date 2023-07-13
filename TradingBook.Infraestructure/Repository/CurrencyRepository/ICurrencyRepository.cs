@@ -7,7 +7,7 @@ using TradingBook.Model.Entity;
 
 namespace TradingBook.Infraestructure.Repository.CurrencyRepository
 {
-    public interface ICurrencyRepository : IEntityRepository<Currency>
+    public interface ICurrencyRepository : IEntityRepository<CurrencyEntity>
     {
     }
 }
