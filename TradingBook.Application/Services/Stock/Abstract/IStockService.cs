@@ -5,14 +5,18 @@ namespace TradingBook.Application.Services.Stock.Abstract
 {
     public interface IStockService
     {
-        public Task<List<StockDto>> GetAll();
+        public Task<List<StockDto>> GetAllAsync();
 
-        public Task<StockDto> SaveStock(SaveStockDto invest);
+        public Task<StockDto> GetByIdAsync(uint id);
 
-        public Task<StockDto> SetMarketLimit(MarketLimitsDto marketLimits);
+        public Task<uint> SaveStockAsync(SaveStockDto invest);
 
-        public Task<StockDto> Sell(SellStockDto sellInvest);
+        public Task<uint> UpdateMarketLimitAsync(MarketLimitsDto marketLimits);
 
-        public void Delete(uint id);
+        public Task<uint> SellAsync(SellStockDto sellInvest);
+
+        public Task DeleteAsync(uint id);
+
+        public Task<decimal> TotalEarnedAsync();
     }
 }

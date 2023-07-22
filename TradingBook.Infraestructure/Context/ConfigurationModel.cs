@@ -42,16 +42,34 @@ namespace TradingBook.Infraestructure.Context
             modelBuilder.Entity<StockEntity>()
                         .HasOne(x => x.StockReference)
                         .WithMany(x => x.Stocks)
-                        .HasForeignKey(x => x.StockReferenceId);
+                        .HasForeignKey(x => x.StockReferenceId)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired(); 
 
             modelBuilder.Entity<StockEntity>()
-                                 .HasOne(x => x.Currency)
-                                 .WithMany(x => x.Stocks)
-                                 .HasForeignKey(x => x.CurrencyId);
+                        .HasOne(x => x.Currency)
+                        .WithMany(x => x.Stocks)
+                        .HasForeignKey(x => x.CurrencyId)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
             modelBuilder.Entity<StockEntity>()
                         .Property(x=>x.IsSelled)
                         .HasDefaultValue(false);
+
+            return modelBuilder;
+        }
+
+        public static ModelBuilder ConfigureDepositModel(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DepositEntity>()
+                        .Property(x => x.Deposit)
+                        .IsRequired(true)
+                        .HasDefaultValue(0.0M);
+
+            modelBuilder.Entity<DepositEntity>()
+                     .Property(x => x.DepositDate)
+                     .IsRequired(true);
 
             return modelBuilder;
         }

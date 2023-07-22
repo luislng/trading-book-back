@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TradingBook.Infraestructure.Context;
 using TradingBook.Infraestructure.Repository.CurrencyRepository;
+using TradingBook.Infraestructure.Repository.DepositRepository;
 using TradingBook.Infraestructure.Repository.Factory;
 using TradingBook.Infraestructure.Repository.StockReferenceRepository;
 using TradingBook.Infraestructure.Repository.StockRepository;
@@ -27,6 +28,7 @@ namespace TradingBook.Infraestructure
             services.AddScoped<ICurrencyRepository, CurrencyRepository>();            
             services.AddScoped<IStockReferenceRepository, StockReferenceRepository>();
             services.AddScoped<IStockRepository, StockRepository>();
+            services.AddScoped<IDepositRepository, DepositRepository>();
 
             return services;
         }

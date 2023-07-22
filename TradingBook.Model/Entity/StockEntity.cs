@@ -3,11 +3,11 @@
     public class StockEntity: EntityBase
     {
         public uint StockReferenceId { get; set; }
-        public StockReferenceEntity? StockReference { get; set; } 
+        public StockReferenceEntity StockReference { get; set; } 
         public decimal Price { get; set; }
         public DateTimeOffset BuyDate { get; set; }
         public uint CurrencyId { get; set; }
-        public CurrencyEntity? Currency { get; set; }
+        public CurrencyEntity Currency { get; set; }
         public decimal Amount { get; set; }
         public decimal Fee { get; set; }
         

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingBook.ExternalServices.ExchangeProvider.Abstract
 {
-    public interface ICurrencyExchangeServiceManager:ICurrencyExchangeService
+    public interface ICurrencyExchangeServiceManager:ICurrencyExchangeServiceProvider
     {
     }
 }

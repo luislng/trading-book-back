@@ -13,39 +13,38 @@ namespace TradingBook.Infraestructure.Repository.StockRepository
             _context = context ?? throw new ArgumentNullException(nameof(SqliteDbContext)); 
         }
 
-        public void Add(StockEntity entity)
+        public async Task AddAsync(StockEntity entity)
         {
-           _context.Stock.Add(entity); 
+           await _context.Stock.AddAsync(entity); 
         }
 
-        public StockEntity Find(uint id, bool trackEntity = true)
+        public async Task<StockEntity> FindAsync(uint id, bool trackEntity = true)
         {
             IQueryable<StockEntity> stockForUpdate = _context.Stock.Where(x => x.Id == id);
 
             if (!trackEntity)
                 stockForUpdate = stockForUpdate.AsNoTracking();
 
-            stockForUpdate = stockForUpdate.Include(x => x.ReturnStockPrice)
+            stockForUpdate = stockForUpdate.Include(x => x.StockReference)
                                            .Include(x => x.Currency);
 
-            StockEntity stockEntity = stockForUpdate.FirstOrDefault() ?? throw new KeyNotFoundException(nameof(StockEntity));
+            StockEntity stockEntity = await stockForUpdate.FirstOrDefaultAsync() ?? throw new KeyNotFoundException(nameof(StockEntity));
 
             return stockEntity;
         }
 
-        public List<StockEntity> GetAll()
+        public async Task<List<StockEntity>> GetAllAsync()
         {
-            return _context.Stock
+            return await _context.Stock
                            .AsNoTracking()
                            .Include(x=>x.StockReference)
                            .Include(x=>x.Currency)
-                           .ToList();
+                           .ToListAsync();
         }
 
-        public void Remove(uint id)
+        public async Task RemoveAsync(uint id)
         {
-            _context.Stock.Where(x => x.Id == id)
-                          .ExecuteDelete();
+            await _context.Stock.Where(x => x.Id == id).ExecuteDeleteAsync();
         }
     }
 }

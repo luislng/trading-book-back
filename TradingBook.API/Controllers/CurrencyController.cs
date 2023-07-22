@@ -21,11 +21,11 @@ namespace TradingBook.API.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(List<CurrencyDto>), 200)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-        public IActionResult GetAllCurrencies()
+        public async Task<IActionResult> GetAllCurrenciesAsync()
         {
             try
             {
-                List<CurrencyDto> currencies = _currencyService.GetCurrencies();
+                List<CurrencyDto> currencies = await _currencyService.GetCurrenciesAsync();
                 return Ok(currencies);
             }
             catch (Exception e)
@@ -37,11 +37,11 @@ namespace TradingBook.API.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(CurrencyDto),StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-        public IActionResult AddCurrency(CurrencyDto currency)
+        public async Task<IActionResult> AddCurrencyAsync(CurrencyDto currency)
         {
             try
             {
-                CurrencyDto currencySaved = _currencyService.SaveCurrency(currency);
+                CurrencyDto currencySaved = await _currencyService.SaveCurrencyAsync(currency);
                 return Ok(currencySaved);
             }
             catch (Exception e)
@@ -54,11 +54,11 @@ namespace TradingBook.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-        public IActionResult DeleteCurrency(uint id)
+        public async Task<IActionResult> DeleteCurrencyAsync(uint id)
         {
             try
             {
-                _currencyService.Delete(id);
+                await _currencyService.DeleteAsync(id);
                 return Ok();
 
             }
@@ -75,13 +75,13 @@ namespace TradingBook.API.Controllers
         [HttpGet("Exchange")]
         [ProducesResponseType(typeof(ExchangeDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Exchange([FromQuery][Required] decimal amount,
+        public async Task<IActionResult> ExchangeAsync([FromQuery][Required] decimal amount,
                                                   [FromQuery][Required] string currencyCodeFrom,
                                                   [FromQuery][Required] string currencyCodeTo)
         {
             try
             {
-                ExchangeDto amountConverted = await _currencyService.Exchange(amount, currencyCodeFrom, currencyCodeTo);
+                ExchangeDto amountConverted = await _currencyService.ExchangeAsync(amount, currencyCodeFrom, currencyCodeTo);
                 return Ok(amountConverted);  
             }
             catch (Exception e)

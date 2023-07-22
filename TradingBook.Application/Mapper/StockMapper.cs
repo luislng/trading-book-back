@@ -7,6 +7,8 @@ namespace TradingBook.Application.Mapper
 {
     internal class StockMapper : MapperBaseProfile<StockEntity, StockDto>
     {
+        private const string DATE_FORMAT = "dd-MM-yyyy";
+
         protected override void CustomizeMap(IMappingExpression<StockEntity, StockDto> mappingExpression)
         {
             mappingExpression.ForMember(x => x.StockReference, 
@@ -24,6 +26,12 @@ namespace TradingBook.Application.Mapper
                                                                                                       Code = stockRef.Currency.Code,
                                                                                                       Name = stockRef.Currency.Name
                                                                                                   }));
+
+            mappingExpression.ForMember(x => x.BuyDate,
+                                        y => y.MapFrom(stockRef => stockRef.BuyDate.ToString(DATE_FORMAT)));
+
+            mappingExpression.ForMember(x => x.SellDate,
+                                        y => y.MapFrom(stockRef => stockRef.SellDate.HasValue ? stockRef.SellDate.Value.ToString(DATE_FORMAT) : ""));
 
             mappingExpression.ReverseMap();
         }

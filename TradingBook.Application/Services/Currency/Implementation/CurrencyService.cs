@@ -18,36 +18,36 @@ namespace TradingBook.Application.Services.Currency.Implementation
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(IUnitOfWork));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(IMapper));
-            _exchangeService = exchangeService ?? throw new ArgumentNullException(nameof(ICurrencyExchangeService));
+            _exchangeService = exchangeService ?? throw new ArgumentNullException(nameof(ICurrencyExchangeServiceProvider));
         }
 
-        public void Delete(uint id)
+        public async Task DeleteAsync(uint id)
         {
             ICurrencyRepository repository = _unitOfWork.GetRepository<ICurrencyRepository>();
-            repository.Remove(id);
+            await repository.RemoveAsync(id);
 
             _unitOfWork.SaveChanges();
         }
              
-        public List<CurrencyDto> GetCurrencies()
+        public async Task<List<CurrencyDto>> GetCurrenciesAsync()
         {
             ICurrencyRepository repository = _unitOfWork.GetRepository<ICurrencyRepository>();
 
-            List<Model.Entity.CurrencyEntity> currencies = repository.GetAll();
+            List<CurrencyEntity> currencies = await repository.GetAllAsync();
 
             List<CurrencyDto> currencyDto = currencies.Select(x => _mapper.Map<CurrencyEntity, CurrencyDto>(x))
                                                       .ToList();
             return currencyDto;
         }
 
-        public CurrencyDto SaveCurrency(CurrencyDto currency)
+        public async Task<CurrencyDto> SaveCurrencyAsync(CurrencyDto currency)
         {
             ICurrencyRepository repository = _unitOfWork.GetRepository<ICurrencyRepository>();
 
             CurrencyDto currencyDto = currency;
             CurrencyEntity currencyEntity = _mapper.Map<CurrencyEntity>(currencyDto);
 
-            repository.Add(currencyEntity);
+            await repository.AddAsync(currencyEntity);
 
             _unitOfWork.SaveChanges();
 
@@ -56,7 +56,7 @@ namespace TradingBook.Application.Services.Currency.Implementation
             return currencyDto;
         }
 
-        public async Task<ExchangeDto> Exchange(decimal amount, string currencyCodeFrom, string currencyCodeTo)
+        public async Task<ExchangeDto> ExchangeAsync(decimal amount, string currencyCodeFrom, string currencyCodeTo)
         {
             decimal exchangeRate = await _exchangeService.ExchangeRate(currencyCodeFrom, currencyCodeTo);
 

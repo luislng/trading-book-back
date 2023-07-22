@@ -13,28 +13,19 @@ namespace TradingBook.Infraestructure.Repository.CurrencyRepository
             _context = context ?? throw new ArgumentNullException(nameof(SqliteDbContext));
         }
 
-        public void Add(CurrencyEntity entity)
+        public async Task AddAsync(CurrencyEntity entity)
         {
-           _context.Currency.Add(entity);   
+           await _context.Currency.AddAsync(entity);   
+        }
+     
+        public async Task<List<CurrencyEntity>> GetAllAsync()
+        {
+            return await _context.Currency.AsNoTracking().ToListAsync();
         }
 
-        public CurrencyEntity Find(uint id)
+        public async Task RemoveAsync(uint id)
         {
-            throw new NotImplementedException();
-        }
-
-        public List<CurrencyEntity> GetAll()
-        {
-            return _context.Currency.AsNoTracking().ToList();
-        }
-
-        public void Remove(uint id)
-        {
-            CurrencyEntity currencyToRemove = _context.Currency
-                                                .Where(x => x.Id == id)
-                                                .FirstOrDefault() ?? throw new KeyNotFoundException(nameof(CurrencyEntity));
-
-            _context.Currency.Remove(currencyToRemove); 
+            await _context.Currency.Where(x => x.Id == id).ExecuteDeleteAsync();
         }
     }
 }

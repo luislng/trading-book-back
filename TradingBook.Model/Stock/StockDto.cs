@@ -8,7 +8,7 @@ namespace TradingBook.Model.Stock
         public StockReferenceDto StockReference { get; set; } = new StockReferenceDto();
         public decimal Price { get; set; } = 0.0M;
         public CurrencyDto Currency { get; set; } = new CurrencyDto();
-        public DateTimeOffset BuyDate { get; set; }
+        public string BuyDate { get; set; } = String.Empty;
         public decimal Amount { get; set; } = 0.0M;
         public decimal Fee { get; set; } = 0.0M;      
         public decimal Deposit { get; set; } = 0.0M;
@@ -31,7 +31,7 @@ namespace TradingBook.Model.Stock
         #region SELL
 
         public bool IsSelled { get; set; } = false;
-        public DateTimeOffset? SellDate { get; set; }
+        public string SellDate { get; set; } = String.Empty;
         public decimal ReturnStockPrice { get; set; } = 0.0M;
         public decimal ReturnStockDiffPricePercentaje { get; set; } = 0.0M;
         public decimal ReturnFee { get; set; } = 0.0M;

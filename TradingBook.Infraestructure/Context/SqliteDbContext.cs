@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TradingBook.Infraestructure.Seeder;
 using TradingBook.Model.Entity;
 
 namespace TradingBook.Infraestructure.Context
@@ -12,8 +13,11 @@ namespace TradingBook.Infraestructure.Context
             modelBuilder.ConfigureStockReferenceModel();
             modelBuilder.ConfigureCurrencyModel();
             modelBuilder.ConfigureStockModel();
+            modelBuilder.ConfigureDepositModel();
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.AddSeeders();
         }
 
         public DbSet<CurrencyEntity> Currency { get; set; }
@@ -21,5 +25,7 @@ namespace TradingBook.Infraestructure.Context
         public DbSet<StockReferenceEntity> StockReference { get; set; }
 
         public DbSet<StockEntity> Stock { get; set; }
+
+        public DbSet<DepositEntity> Deposit { get; set; }
     }
 }

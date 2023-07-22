@@ -15,22 +15,19 @@ namespace TradingBook.Infraestructure.Repository.StockReferenceRepository
             _context = context ?? throw new ArgumentNullException(nameof(SqliteDbContext));                
         }
 
-        public void Add(StockReferenceEntity entity)
+        public async Task AddAsync(StockReferenceEntity entity)
         {
-            _context.StockReference.Add(entity);
+            await _context.StockReference.AddAsync(entity);
         }
 
-        public void Remove(uint id)
+        public async Task RemoveAsync(uint id)
         {
-            StockReferenceEntity assetForDelete = _context.StockReference.Where(x => x.Id == id)
-                                                 .FirstOrDefault() ?? throw new KeyNotFoundException(nameof(StockReferenceEntity));
-            
-            _context.StockReference.Remove(assetForDelete);
+            await _context.StockReference.Where(x => x.Id == id).ExecuteDeleteAsync();
         }
 
-        public List<StockReferenceEntity> GetAll()
+        public async Task<List<StockReferenceEntity>> GetAllAsync()
         {
-            return _context.StockReference.AsNoTracking().ToList();
+            return await _context.StockReference.AsNoTracking().ToListAsync();
         }
     }
 }

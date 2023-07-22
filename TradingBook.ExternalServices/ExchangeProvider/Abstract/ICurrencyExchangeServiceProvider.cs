@@ -1,6 +1,6 @@
 ﻿namespace TradingBook.ExternalServices.ExchangeProvider.Abstract
 {
-    public interface ICurrencyExchangeService
+    public interface ICurrencyExchangeServiceProvider
     {
         public Task<decimal> ExchangeRate(string currencyCodeFrom, string currencyCodeTo);
     }

@@ -17,19 +17,19 @@ namespace TradingBook.Application.Services.StockReference.Implementation
             _mapper = mapper ?? throw new ArgumentNullException(nameof(IMapper));
         }
 
-        public void Delete(uint id)
+        public async Task DeleteAsync(uint id)
         {
             IStockReferenceRepository repository = _unitOfWork.GetRepository<IStockReferenceRepository>();
-            repository.Remove(id);
+            await repository.RemoveAsync(id);
 
             _unitOfWork.SaveChanges();
         }
 
-        public List<StockReferenceDto> GetAllAssets()
+        public async Task<List<StockReferenceDto>> GetAllAssetsAsync()
         {
             IStockReferenceRepository repository = _unitOfWork.GetRepository<IStockReferenceRepository>();
 
-            List<Model.Entity.StockReferenceEntity> assets = repository.GetAll();
+            List<Model.Entity.StockReferenceEntity> assets = await repository.GetAllAsync();
 
             List<StockReferenceDto> assetDto = assets.Select(x => _mapper.Map<Model.Entity.StockReferenceEntity, StockReferenceDto>(x))
                                             .ToList();
@@ -37,14 +37,14 @@ namespace TradingBook.Application.Services.StockReference.Implementation
             return assetDto;
         }
 
-        public StockReferenceDto SaveAsset(StockReferenceDto asset)
+        public async Task<StockReferenceDto> SaveAssetAsync(StockReferenceDto asset)
         {
             IStockReferenceRepository repository = _unitOfWork.GetRepository<IStockReferenceRepository>();
 
             StockReferenceDto assetDto = asset;
             Model.Entity.StockReferenceEntity assetEntity = _mapper.Map<Model.Entity.StockReferenceEntity>(assetDto);
 
-            repository.Add(assetEntity);
+            await repository.AddAsync(assetEntity);
 
             _unitOfWork.SaveChanges();
 

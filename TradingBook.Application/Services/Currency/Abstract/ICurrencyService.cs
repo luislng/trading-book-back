@@ -4,12 +4,12 @@ namespace TradingBook.Application.Services.Currency.Abstract
 {
     public interface ICurrencyService
     {
-        public CurrencyDto SaveCurrency(CurrencyDto currency);
+        public Task<CurrencyDto> SaveCurrencyAsync(CurrencyDto currency);
 
-        public List<CurrencyDto> GetCurrencies();
+        public Task<List<CurrencyDto>> GetCurrenciesAsync();
 
-        public void Delete(uint id);
+        public Task DeleteAsync(uint id);
 
-        public Task<ExchangeDto> Exchange(decimal amount, string currencyCodeFrom, string currencyCodeTo);
+        public Task<ExchangeDto> ExchangeAsync(decimal amount, string currencyCodeFrom, string currencyCodeTo);
     }
 }

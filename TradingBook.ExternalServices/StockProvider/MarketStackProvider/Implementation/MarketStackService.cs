@@ -5,7 +5,7 @@ using TradingBook.ExternalServices.StockProvider.MarketStackProvider.Model;
 
 namespace TradingBook.ExternalServices.StockProvider.MarketStackProvider.Implementation
 {
-    internal class MarketStackService : IStockProviderService
+    internal class MarketStackService : IStockServiceProvider
     {
         private readonly IHttpService _httpService;
         private readonly IConfiguration _configuration;

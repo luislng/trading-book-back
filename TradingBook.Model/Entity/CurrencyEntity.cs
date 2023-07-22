@@ -6,6 +6,6 @@
 
         public string Code { get; set; } = String.Empty;
 
-        public virtual ICollection<StockEntity> Stocks { get; set; }
+        public virtual ICollection<StockEntity>? Stocks { get; set; }
     }
 }

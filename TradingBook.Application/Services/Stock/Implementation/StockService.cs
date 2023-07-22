@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using TradingBook.Application.Services.Stock.Abstract;
 using TradingBook.ExternalServices.StockProvider.Abstract;
 using TradingBook.Infraestructure.Repository.StockRepository;
@@ -13,16 +14,18 @@ namespace TradingBook.Application.Services.Stock.Implementation
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IStockProviderService _stockProviderService;
+        private readonly IStockServiceManager _stockProviderService;
+        private readonly ILogger<StockService> _logger;
 
-        public StockService(IUnitOfWork unitOfWork, IMapper mapper, IStockProviderService stockProviderService)
+        public StockService(IUnitOfWork unitOfWork, IMapper mapper, IStockServiceManager stockProviderService,ILogger<StockService> log)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(IUnitOfWork));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(IMapper));
-            _stockProviderService = stockProviderService ?? throw new ArgumentNullException(nameof(IStockProviderService));
+            _stockProviderService = stockProviderService ?? throw new ArgumentNullException(nameof(IStockServiceManager));
+            _logger = log ?? throw new ArgumentNullException(nameof(ILogger));
         }
 
-        public async Task<StockDto> SaveStock(SaveStockDto invest)
+        public async Task<uint> SaveStockAsync(SaveStockDto invest)
         {
             IStockRepository repository =  _unitOfWork.GetRepository<IStockRepository>();
 
@@ -30,107 +33,119 @@ namespace TradingBook.Application.Services.Stock.Implementation
 
             stockEntity.BuyDate = DateTimeOffset.Now;
 
-            repository.Add(stockEntity);
+            await repository.AddAsync(stockEntity);
 
             _unitOfWork.SaveChanges();
 
-            StockDto stockDto = await GetBuildedStockById(stockEntity.Id);
-
-            return stockDto;
+            return stockEntity.Id;
         }
 
-        public async Task<StockDto> SetMarketLimit(MarketLimitsDto marketLimits)
+        public async Task<uint> UpdateMarketLimitAsync(MarketLimitsDto marketLimits)
         {
             IStockRepository repository = _unitOfWork.GetRepository<IStockRepository>();
 
-            StockEntity stockEntity = repository.Find(marketLimits.StockId);
+            StockEntity stockEntity = await repository.FindAsync(marketLimits.StockId);
 
             stockEntity.StopLoss = marketLimits.StopLoss;
             stockEntity.SellLimit = marketLimits.SellLimit;
 
             _unitOfWork.SaveChanges();
 
-            StockDto stockDto = await GetBuildedStockById(stockEntity.Id);
-
-            return stockDto;
+            return stockEntity.Id;
         }
 
-        public async Task<StockDto> Sell(SellStockDto sellInvest)
+        public async Task<uint> SellAsync(SellStockDto sellInvest)
         {
             IStockRepository repository = _unitOfWork.GetRepository<IStockRepository>();
 
-            StockEntity stockEntity = repository.Find(sellInvest.StockId);
+            StockEntity stockEntity = await repository.FindAsync(sellInvest.StockId);
 
             stockEntity.ReturnAmount = sellInvest.Return;
-            stockEntity.Fee = sellInvest.Fee;
+            stockEntity.ReturnFee = sellInvest.ReturnFee;
             stockEntity.ReturnStockPrice = sellInvest.ReturnStockPrice;
             stockEntity.IsSelled = true;
             stockEntity.SellDate = DateTimeOffset.Now;
 
             _unitOfWork.SaveChanges();
 
-            StockDto stockDto = await GetBuildedStockById(stockEntity.Id);
-
-            return stockDto;
+            return stockEntity.Id;
         }
 
-        public void Delete(uint id)
+        public async Task DeleteAsync(uint id)
         {
             IStockRepository repository = _unitOfWork.GetRepository<IStockRepository>();
-            repository.Remove(id);
+            await repository.RemoveAsync(id);
 
             _unitOfWork.SaveChanges();
         }
 
-        public async Task<List<StockDto>> GetAll()
+        public async Task<List<StockDto>> GetAllAsync()
         {
             IStockRepository repository = _unitOfWork.GetRepository<IStockRepository>();
 
-            IEnumerable<StockEntity> stockEntityCollection = repository.GetAll();
+            IEnumerable<StockEntity> stockEntityCollection = await repository.GetAllAsync();
 
-            var stockEntitiesTask = stockEntityCollection.Select(async x => await BuildStock(x));
+            var stockEntitiesTask = stockEntityCollection.Select(async x => await BuildStockAsync(x));
 
-            List<StockDto> stockEntities = (await Task.WhenAll(stockEntitiesTask)).ToList();
+            List<StockDto> stockEntities = (await Task.WhenAll(stockEntitiesTask)).OrderByDescending(x=>x.BuyDate)
+                                                                                  .ToList();
 
             return stockEntities;
         }
 
-        private async Task<StockDto> GetBuildedStockById(uint id)
+        public async Task<StockDto> GetByIdAsync(uint id)
         {
             IStockRepository repository = _unitOfWork.GetRepository<IStockRepository>();
 
-            StockEntity stockEntity = repository.Find(id, trackEntity:false);
+            StockEntity stockEntity = await repository.FindAsync(id, trackEntity:false);
 
-            StockDto stockDto = await BuildStock(stockEntity);
+            StockDto stockDto = await BuildStockAsync(stockEntity);
 
             return stockDto;
         }
 
-        private async Task<StockDto> BuildStock(StockEntity stockEntity)
+        private async Task<StockDto> BuildStockAsync(StockEntity stockEntity)
         {
             StockDto stockAux = _mapper.Map<StockDto>(stockEntity);
 
-            stockAux.Deposit = stockAux.Amount - stockAux.Fee;            
+            try
+            {
+                stockAux.Deposit = stockAux.Amount - stockAux.Fee;
 
-            decimal stockPrice = await _stockProviderService.StockPrice(stockEntity.StockReference?.Code);
-            stockAux.CurrentPrice = stockPrice;
-            stockAux.PercentajeDiff = ((stockAux.CurrentPrice - stockAux.Price) / stockAux.Price) * 100M;
+                ///TODO: Only for test purposes!
+                //decimal stockPrice = await _stockProviderService.StockPrice(stockEntity.StockReference?.Code);
+                decimal stockPrice = 100.256845M;
+                stockAux.CurrentPrice = stockPrice;
 
-            if (stockAux.CurrentPrice >= stockAux.SellLimit)
-                stockAux.RecomendedAction = InvestActions.SELL;
-            else
-                if(stockAux.CurrentPrice <= stockAux.StopLoss)
+                stockAux.PercentajeDiff = ((stockAux.CurrentPrice - stockAux.Price) / stockAux.Price) * 100M;
+
+                if ((stockAux.CurrentPrice >= stockAux.SellLimit) || (stockAux.CurrentPrice <= stockAux.StopLoss))
                     stockAux.RecomendedAction = InvestActions.SELL;
-            
-            stockAux.RecomendedAction = InvestActions.HOLD;
+                else
+                    stockAux.RecomendedAction = InvestActions.HOLD;
 
-            stockAux.ReturnStockDiffPricePercentaje = ((stockAux.ReturnStockPrice - stockAux.Price) / stockAux.Price) * 100M;
+                if (stockAux.IsSelled)
+                {
+                    stockAux.ReturnStockDiffPricePercentaje = ((stockAux.ReturnStockPrice - stockAux.Price) / stockAux.Price) * 100M;
 
-            stockAux.ReturnEarn = stockAux.ReturnAmount - stockAux.Amount;
+                    stockAux.ReturnEarn = stockAux.ReturnAmount - stockAux.Amount;
 
-            stockAux.ReturnDiffAmount = ((stockAux.ReturnAmount - stockAux.Amount) / stockAux.Amount) * 100M;
+                    stockAux.ReturnDiffAmount = ((stockAux.ReturnAmount - stockAux.Amount) / stockAux.Amount) * 100M;
+                }
+
+            }catch(Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
 
             return stockAux;
+        }
+
+        public async Task<decimal> TotalEarnedAsync()
+        {
+            IStockRepository stockRepository = _unitOfWork.GetRepository<IStockRepository>();
+            decimal totalAmountEarned = (await stockRepository.GetAllAsync()).Sum(x => x.ReturnAmount);
+            return totalAmountEarned;
         }
     }
 }

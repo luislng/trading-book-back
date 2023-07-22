@@ -6,7 +6,7 @@ using TradingBook.ExternalServices.Http.Abstract;
 
 namespace TradingBook.ExternalServices.ExchangeProvider.AlphaVantage.Implementation
 {
-    internal class AlphaVantageExchangeService : ICurrencyExchangeService
+    internal class AlphaVantageExchangeService : ICurrencyExchangeServiceProvider
     {
         private readonly IHttpService _httpService;
         private readonly IConfiguration _configuration;

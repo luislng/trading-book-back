@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace TradingBook.Infraestructure.Migrations
 {
     /// <inheritdoc />
@@ -23,6 +25,20 @@ namespace TradingBook.Infraestructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Currency", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Deposit",
+                columns: table => new
+                {
+                    Id = table.Column<uint>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Deposit = table.Column<decimal>(type: "TEXT", nullable: false, defaultValue: 0.0m),
+                    DepositDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Deposit", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,13 +83,31 @@ namespace TradingBook.Infraestructure.Migrations
                         column: x => x.CurrencyId,
                         principalTable: "Currency",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Stock_StockReference_StockReferenceId",
                         column: x => x.StockReferenceId,
                         principalTable: "StockReference",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Currency",
+                columns: new[] { "Id", "Code", "Name" },
+                values: new object[,]
+                {
+                    { 1u, "EUR", "Euro" },
+                    { 2u, "USD", "Dollar" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "StockReference",
+                columns: new[] { "Id", "Code", "Name" },
+                values: new object[,]
+                {
+                    { 1u, "MSFT", "Microsoft" },
+                    { 2u, "TSM", "TaiwanSemiCond" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -90,6 +124,9 @@ namespace TradingBook.Infraestructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Deposit");
+
             migrationBuilder.DropTable(
                 name: "Stock");
 

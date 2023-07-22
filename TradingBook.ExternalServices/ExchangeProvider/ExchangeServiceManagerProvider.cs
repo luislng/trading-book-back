@@ -5,12 +5,12 @@ using TradingBook.ExternalServices.ExchangeProvider.Abstract;
 
 namespace TradingBook.ExternalServices.ExchangeProvider
 {
-    internal class ExchangeLoadBalancerProvider : ICurrencyExchangeServiceManager
+    internal class ExchangeServiceManagerProvider : ICurrencyExchangeServiceManager
     {
         private const string KEY_CACHE_EXCHANGE = "ExchangeValue";
 
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<ExchangeLoadBalancerProvider> _log;   
+        private readonly ILogger<ExchangeServiceManagerProvider> _log;   
         private readonly IMemoryCache _memoryCache;
 
         private MemoryCacheEntryOptions CacheOptions
@@ -24,7 +24,7 @@ namespace TradingBook.ExternalServices.ExchangeProvider
             } 
         }
 
-        public ExchangeLoadBalancerProvider(IServiceProvider serviceProvider, ILogger<ExchangeLoadBalancerProvider> log, IMemoryCache cache)
+        public ExchangeServiceManagerProvider(IServiceProvider serviceProvider, ILogger<ExchangeServiceManagerProvider> log, IMemoryCache cache)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(IServiceProvider));
             _log = log ?? throw new ArgumentNullException(nameof(ILogger));
@@ -35,9 +35,9 @@ namespace TradingBook.ExternalServices.ExchangeProvider
         {
             if(!_memoryCache.TryGetValue<decimal>(BuildCacheKey(currencyCodeFrom, currencyCodeTo), out decimal exchangeCachedValue))
             {
-                IEnumerable<ICurrencyExchangeService> exchangeServices = _serviceProvider.GetServices<ICurrencyExchangeService>();
+                IEnumerable<ICurrencyExchangeServiceProvider> exchangeServices = _serviceProvider.GetServices<ICurrencyExchangeServiceProvider>();
 
-                foreach (ICurrencyExchangeService currencyExchange in exchangeServices)
+                foreach (ICurrencyExchangeServiceProvider currencyExchange in exchangeServices)
                 {
                     try
                     {
@@ -53,7 +53,7 @@ namespace TradingBook.ExternalServices.ExchangeProvider
                     }
                 }
 
-                throw new Exception("Exchange rate services not availables");
+                throw new Exception("Exchange rate services not availables, see log for more info");
             }
 
             return exchangeCachedValue;

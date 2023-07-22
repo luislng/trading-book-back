@@ -5,6 +5,7 @@ using TradingBook.ExternalServices.ExchangeProvider.AlphaVantage.Implementation;
 using TradingBook.ExternalServices.ExchangeProvider.ApiExchange.Implementation;
 using TradingBook.ExternalServices.Http.Abstract;
 using TradingBook.ExternalServices.Http.Implementation;
+using TradingBook.ExternalServices.StockProvider;
 using TradingBook.ExternalServices.StockProvider.Abstract;
 using TradingBook.ExternalServices.StockProvider.MarketStackProvider.Implementation;
 
@@ -16,11 +17,14 @@ namespace TradingBook.ExternalServices
         {
             services.AddTransient<IHttpService, HttpService>();
             services.AddMemoryCache();
-            services.AddTransient<ICurrencyExchangeService, CurrencyApiExchangeService>();
-            services.AddTransient<ICurrencyExchangeService, AlphaVantageExchangeService>();
-            services.AddTransient<ICurrencyExchangeServiceManager, ExchangeLoadBalancerProvider>();
 
-            services.AddTransient<IStockProviderService, MarketStackService>();
+            services.AddTransient<ICurrencyExchangeServiceProvider, CurrencyApiExchangeService>();
+            services.AddTransient<ICurrencyExchangeServiceProvider, AlphaVantageExchangeService>();
+            services.AddTransient<ICurrencyExchangeServiceManager, ExchangeServiceManagerProvider>();
+
+            services.AddTransient<IStockServiceProvider, MarketStackService>();
+            services.AddTransient<IStockServiceManager, StockServiceManagerProvider>();
+
             return services;
         }
     }

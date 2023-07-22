@@ -21,11 +21,11 @@ namespace TradingBook.API.Controllers
 
         [HttpGet()]
         [ProducesResponseType(typeof(List<StockDto>),StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllStocks()
+        public async Task<IActionResult> GetAllStocksAsync()
         {
             try
             {
-                List<StockDto> stockDtos = await _stockService.GetAll();
+                List<StockDto> stockDtos = await _stockService.GetAllAsync();
                 return Ok(stockDtos);
             }
             catch (Exception e)
@@ -34,15 +34,35 @@ namespace TradingBook.API.Controllers
             }
         }
 
-        [HttpPost]
-        [ProducesResponseType(typeof(StockDto), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> SaveInvest([FromBody][Required] SaveStockDto invest)
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(StockDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetStockByIdAsync(uint id)
         {
             try
             {
-                StockDto addedInvest = await _stockService.SaveStock(invest);  
-                return StatusCode(StatusCodes.Status201Created, addedInvest);
+                StockDto stockDtos = await _stockService.GetByIdAsync(id);
+                return Ok(stockDtos);
+            }
+            catch(KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(uint), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> SaveInvestAsync([FromBody][Required] SaveStockDto invest)
+        {
+            try
+            {
+                uint addedInvestId = await _stockService.SaveStockAsync(invest);  
+                return StatusCode(StatusCodes.Status201Created, addedInvestId);
             }
             catch(Exception e)
             {
@@ -53,11 +73,11 @@ namespace TradingBook.API.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        public IActionResult DeleteStock(uint id)
+        public async Task<IActionResult> DeleteStockAsync(uint id)
         {
             try
             {
-                _stockService.Delete(id);
+                await _stockService.DeleteAsync(id);
                 return Ok();
             }
             catch (KeyNotFoundException)
@@ -71,14 +91,14 @@ namespace TradingBook.API.Controllers
         }
 
         [HttpPatch("Sell")]
-        [ProducesResponseType(typeof(StockDto),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(uint),StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Sell([FromBody][Required] SellStockDto sellStock)
+        public async Task<IActionResult> SellAsync([FromBody][Required] SellStockDto sellStock)
         {
             try
             {
-                StockDto invest = await _stockService.Sell(sellStock);
-                return Ok(invest);
+                uint stockId = await _stockService.SellAsync(sellStock);
+                return Ok(stockId);
 
             }
             catch (KeyNotFoundException)
@@ -93,13 +113,13 @@ namespace TradingBook.API.Controllers
 
         [HttpPatch("MarketLimit")]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(StockDto), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateMarketLimits([FromBody][Required]MarketLimitsDto marketLimits)
+        [ProducesResponseType(typeof(uint), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateMarketLimitsAsync([FromBody][Required]MarketLimitsDto marketLimits)
         {
             try
             {
-                StockDto invest = await _stockService.SetMarketLimit(marketLimits);
-                return Ok(invest);
+                uint stockId = await _stockService.UpdateMarketLimitAsync(marketLimits);
+                return Ok(stockId);
 
             }
             catch (KeyNotFoundException)

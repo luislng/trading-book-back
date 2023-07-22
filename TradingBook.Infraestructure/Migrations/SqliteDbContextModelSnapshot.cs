@@ -36,6 +36,39 @@ namespace TradingBook.Infraestructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Currency");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1u,
+                            Code = "EUR",
+                            Name = "Euro"
+                        },
+                        new
+                        {
+                            Id = 2u,
+                            Code = "USD",
+                            Name = "Dollar"
+                        });
+                });
+
+            modelBuilder.Entity("TradingBook.Model.Entity.DepositEntity", b =>
+                {
+                    b.Property<uint>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Deposit")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue(0.0m);
+
+                    b.Property<DateTimeOffset>("DepositDate")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Deposit");
                 });
 
             modelBuilder.Entity("TradingBook.Model.Entity.StockEntity", b =>
@@ -113,6 +146,20 @@ namespace TradingBook.Infraestructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StockReference");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1u,
+                            Code = "MSFT",
+                            Name = "Microsoft"
+                        },
+                        new
+                        {
+                            Id = 2u,
+                            Code = "TSM",
+                            Name = "TaiwanSemiCond"
+                        });
                 });
 
             modelBuilder.Entity("TradingBook.Model.Entity.StockEntity", b =>
@@ -120,13 +167,13 @@ namespace TradingBook.Infraestructure.Migrations
                     b.HasOne("TradingBook.Model.Entity.CurrencyEntity", "Currency")
                         .WithMany("Stocks")
                         .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("TradingBook.Model.Entity.StockReferenceEntity", "StockReference")
                         .WithMany("Stocks")
                         .HasForeignKey("StockReferenceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Currency");

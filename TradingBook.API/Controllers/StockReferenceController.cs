@@ -21,11 +21,11 @@ namespace TradingBook.API.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(List<StockReferenceDto>), 200)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-        public IActionResult GetAllAssets()
+        public async Task<IActionResult> GetAllAssetsAsync()
         {
             try
             {
-                return Ok(_assetService.GetAllAssets());
+                return Ok(await _assetService.GetAllAssetsAsync());
 
             }catch(Exception e)
             {
@@ -36,11 +36,11 @@ namespace TradingBook.API.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(List<StockReferenceDto>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-        public IActionResult SaveAsset([FromBody][Required]StockReferenceDto asset)
+        public async Task<IActionResult> SaveAssetAsync([FromBody][Required]StockReferenceDto asset)
         {
             try
             {
-                StockReferenceDto assetSaved = _assetService.SaveAsset(asset);
+                StockReferenceDto assetSaved = await _assetService.SaveAssetAsync(asset);
                 return StatusCode(StatusCodes.Status201Created, assetSaved);
 
             }catch(Exception e)
@@ -50,14 +50,15 @@ namespace TradingBook.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-        public IActionResult DeleteAsset(uint id)
+        public async Task<IActionResult> DeleteAssetAsync(uint id)
         {
             try
             {
-                _assetService.Delete(id);
+                await _assetService.DeleteAsync(id);
                 return Ok();
 
             }catch(KeyNotFoundException)

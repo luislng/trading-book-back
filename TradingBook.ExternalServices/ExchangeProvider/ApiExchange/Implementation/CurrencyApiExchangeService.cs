@@ -6,7 +6,7 @@ using TradingBook.ExternalServices.Http.Abstract;
 
 namespace TradingBook.ExternalServices.ExchangeProvider.ApiExchange.Implementation
 {
-    internal class CurrencyApiExchangeService : ICurrencyExchangeService
+    internal class CurrencyApiExchangeService : ICurrencyExchangeServiceProvider
     {
         private readonly IHttpService _httpService;
         private readonly IConfiguration _configuration;
