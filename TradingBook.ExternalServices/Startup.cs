@@ -7,6 +7,7 @@ using TradingBook.ExternalServices.Http.Abstract;
 using TradingBook.ExternalServices.Http.Implementation;
 using TradingBook.ExternalServices.StockProvider;
 using TradingBook.ExternalServices.StockProvider.Abstract;
+using TradingBook.ExternalServices.StockProvider.FinnHubProvider.Implementation;
 using TradingBook.ExternalServices.StockProvider.MarketStackProvider.Implementation;
 
 namespace TradingBook.ExternalServices
@@ -23,7 +24,8 @@ namespace TradingBook.ExternalServices
             services.AddTransient<ICurrencyExchangeServiceManager, ExchangeServiceManagerProvider>();
 
             services.AddTransient<IStockServiceProvider, MarketStackService>();
-            services.AddTransient<IStockServiceManager, StockServiceManagerProvider>();
+            services.AddTransient<IStockServiceProvider, FinHubProviderService>();
+            services.AddTransient<IStockServiceManager, StockServiceManagerProvider>();            
 
             return services;
         }

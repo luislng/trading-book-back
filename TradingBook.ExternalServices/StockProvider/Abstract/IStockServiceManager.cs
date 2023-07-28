@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TradingBook.ExternalServices.StockProvider.Abstract
+﻿namespace TradingBook.ExternalServices.StockProvider.Abstract
 {
-    public interface IStockServiceManager: IStockServiceProvider
+    public interface IStockServiceManager
     {
+        public Task<decimal> StockPrice(string stockCode);
     }
 }

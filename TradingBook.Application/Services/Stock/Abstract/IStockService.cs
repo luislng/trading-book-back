@@ -17,6 +17,6 @@ namespace TradingBook.Application.Services.Stock.Abstract
 
         public Task DeleteAsync(uint id);
 
-        public Task<decimal> TotalEarnedAsync();
+        public Task<decimal> TotalEurEarnedAsync();
     }
 }

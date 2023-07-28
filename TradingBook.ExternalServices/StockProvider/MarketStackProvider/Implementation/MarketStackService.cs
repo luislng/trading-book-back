@@ -16,7 +16,7 @@ namespace TradingBook.ExternalServices.StockProvider.MarketStackProvider.Impleme
             _configuration = configuration;
         }
 
-        public async Task<decimal> StockPrice(string stockCode)
+        public async Task<decimal> RequestStockPrice(string stockCode)
         {
             Uri uri = BuildUri();
             Dictionary<string, string> parameters = BuildParameters(stockCode);

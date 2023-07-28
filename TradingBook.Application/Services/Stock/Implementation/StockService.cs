@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using TradingBook.Application.Services.Stock.Abstract;
+using TradingBook.ExternalServices.ExchangeProvider.Abstract;
 using TradingBook.ExternalServices.StockProvider.Abstract;
 using TradingBook.Infraestructure.Repository.StockRepository;
 using TradingBook.Infraestructure.UnitOfWork;
@@ -16,13 +17,16 @@ namespace TradingBook.Application.Services.Stock.Implementation
         private readonly IMapper _mapper;
         private readonly IStockServiceManager _stockProviderService;
         private readonly ILogger<StockService> _logger;
+        private readonly ICurrencyExchangeServiceManager _exchangeService;  
 
-        public StockService(IUnitOfWork unitOfWork, IMapper mapper, IStockServiceManager stockProviderService,ILogger<StockService> log)
+        public StockService(IUnitOfWork unitOfWork, IMapper mapper, IStockServiceManager stockProviderService,ILogger<StockService> log,
+                            ICurrencyExchangeServiceManager exchangeService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(IUnitOfWork));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(IMapper));
             _stockProviderService = stockProviderService ?? throw new ArgumentNullException(nameof(IStockServiceManager));
             _logger = log ?? throw new ArgumentNullException(nameof(ILogger));
+            _exchangeService = exchangeService ?? throw new ArgumentNullException(nameof(ICurrencyExchangeServiceManager));
         }
 
         public async Task<uint> SaveStockAsync(SaveStockDto invest)
@@ -60,10 +64,10 @@ namespace TradingBook.Application.Services.Stock.Implementation
 
             StockEntity stockEntity = await repository.FindAsync(sellInvest.StockId);
 
+            stockEntity.IsSelled = true;
             stockEntity.ReturnAmount = sellInvest.Return;
             stockEntity.ReturnFee = sellInvest.ReturnFee;
-            stockEntity.ReturnStockPrice = sellInvest.ReturnStockPrice;
-            stockEntity.IsSelled = true;
+            stockEntity.ReturnStockPrice = sellInvest.ReturnStockPrice;            
             stockEntity.SellDate = DateTimeOffset.Now;
 
             _unitOfWork.SaveChanges();
@@ -112,9 +116,8 @@ namespace TradingBook.Application.Services.Stock.Implementation
             {
                 stockAux.Deposit = stockAux.Amount - stockAux.Fee;
 
-                ///TODO: Only for test purposes!
-                //decimal stockPrice = await _stockProviderService.StockPrice(stockEntity.StockReference?.Code);
-                decimal stockPrice = 100.256845M;
+                decimal stockPrice = await _stockProviderService.StockPrice(stockEntity.StockReference?.Code);
+                
                 stockAux.CurrentPrice = stockPrice;
 
                 stockAux.PercentajeDiff = ((stockAux.CurrentPrice - stockAux.Price) / stockAux.Price) * 100M;
@@ -128,9 +131,11 @@ namespace TradingBook.Application.Services.Stock.Implementation
                 {
                     stockAux.ReturnStockDiffPricePercentaje = ((stockAux.ReturnStockPrice - stockAux.Price) / stockAux.Price) * 100M;
 
-                    stockAux.ReturnEarn = stockAux.ReturnAmount - stockAux.Amount;
+                    stockAux.ReturnAmountWithFee = stockAux.ReturnAmount - stockAux.ReturnFee;
 
-                    stockAux.ReturnDiffAmount = ((stockAux.ReturnAmount - stockAux.Amount) / stockAux.Amount) * 100M;
+                    stockAux.ReturnEarn = stockAux.ReturnAmountWithFee - stockAux.Amount;
+
+                    stockAux.ReturnDiffAmount = ((stockAux.ReturnAmountWithFee - stockAux.Amount) / stockAux.Amount) * 100M;
                 }
 
             }catch(Exception e)
@@ -141,10 +146,27 @@ namespace TradingBook.Application.Services.Stock.Implementation
             return stockAux;
         }
 
-        public async Task<decimal> TotalEarnedAsync()
+        public async Task<decimal> TotalEurEarnedAsync()
         {
-            IStockRepository stockRepository = _unitOfWork.GetRepository<IStockRepository>();
-            decimal totalAmountEarned = (await stockRepository.GetAllAsync()).Sum(x => x.ReturnAmount);
+            const string EUR_CURRENCY_CODE = "EUR";
+
+            decimal totalAmountEarned = 0.0M;
+
+            IStockRepository stockRepository = _unitOfWork.GetRepository<IStockRepository>();            
+
+            List<StockEntity> stockSells = (await stockRepository.GetAllAsync()).Where(x => x.IsSelled)
+                                                                                .ToList();
+
+            foreach (var stockAux in stockSells)
+            {
+                decimal exchangeRate = 1.0M;
+
+                if(stockAux.Currency.Code != EUR_CURRENCY_CODE)
+                     exchangeRate = await _exchangeService.ExchangeRate(stockAux.Currency.Code, EUR_CURRENCY_CODE);
+
+                totalAmountEarned += (stockAux.ReturnAmount - stockAux.ReturnFee - stockAux.Amount) * exchangeRate;
+            }                                                               
+
             return totalAmountEarned;
         }
     }

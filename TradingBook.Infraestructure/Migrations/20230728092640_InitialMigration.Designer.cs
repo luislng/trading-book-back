@@ -11,7 +11,7 @@ using TradingBook.Infraestructure.Context;
 namespace TradingBook.Infraestructure.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20230722201325_InitialMigration")]
+    [Migration("20230728092640_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />

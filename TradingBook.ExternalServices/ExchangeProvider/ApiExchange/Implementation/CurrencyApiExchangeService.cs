@@ -17,7 +17,7 @@ namespace TradingBook.ExternalServices.ExchangeProvider.ApiExchange.Implementati
             _configuration = configuration ?? throw new ArgumentNullException(nameof(IConfiguration));
         }
 
-        public async Task<decimal> ExchangeRate(string currencyCodeFrom, string currencyCodeTo)
+        public async Task<decimal> RequestExchangeRate(string currencyCodeFrom, string currencyCodeTo)
         {
             Uri uri = BuildUri();
             Dictionary<string, string> headers = BuildHeaders();

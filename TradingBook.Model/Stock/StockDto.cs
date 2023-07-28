@@ -38,7 +38,8 @@ namespace TradingBook.Model.Stock
         public decimal ReturnAmount { get; set; } = 0.0M;      
         public decimal ReturnEarn { get; set; } = 0.0M;
         public decimal ReturnDiffAmount { get; set; } = 0.0M;
-       
+        public decimal ReturnAmountWithFee { get; set; } = 0.0M;
+
         #endregion
     }
 }

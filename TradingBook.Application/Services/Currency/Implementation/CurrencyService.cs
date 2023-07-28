@@ -18,7 +18,7 @@ namespace TradingBook.Application.Services.Currency.Implementation
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(IUnitOfWork));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(IMapper));
-            _exchangeService = exchangeService ?? throw new ArgumentNullException(nameof(ICurrencyExchangeServiceProvider));
+            _exchangeService = exchangeService ?? throw new ArgumentNullException(nameof(ICurrencyExchangeServiceManager));
         }
 
         public async Task DeleteAsync(uint id)

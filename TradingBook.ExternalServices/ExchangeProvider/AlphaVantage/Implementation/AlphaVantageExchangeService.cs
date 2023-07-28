@@ -17,7 +17,7 @@ namespace TradingBook.ExternalServices.ExchangeProvider.AlphaVantage.Implementat
             _configuration = configuration ?? throw new ArgumentNullException(nameof(IConfiguration));
         }
 
-        public async Task<decimal> ExchangeRate(string currencyCodeFrom, string currencyCodeTo)
+        public async Task<decimal> RequestExchangeRate(string currencyCodeFrom, string currencyCodeTo)
         {
             Uri uri = BuildUri();            
             Dictionary<string, string> parameters = BuildParameters(currencyCodeFrom, currencyCodeTo);

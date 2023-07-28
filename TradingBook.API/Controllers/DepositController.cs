@@ -24,8 +24,8 @@ namespace TradingBook.API.Controllers
         {
             try
             {
-                decimal amount = await _depositService.TotalDepositAmountAsync();   
-                return Ok(amount);
+                decimal amount = await _depositService.TotalDepositAmountAsync();
+                return Ok(new { Amount = amount });
             }
             catch (Exception e)
             {

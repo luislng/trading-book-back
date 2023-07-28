@@ -13,7 +13,7 @@ namespace TradingBook.ExternalServices.ExchangeProvider
         private readonly ILogger<ExchangeServiceManagerProvider> _log;   
         private readonly IMemoryCache _memoryCache;
 
-        private MemoryCacheEntryOptions CacheOptions
+        private static MemoryCacheEntryOptions CacheOptions
         {
             get
             {
@@ -41,7 +41,9 @@ namespace TradingBook.ExternalServices.ExchangeProvider
                 {
                     try
                     {
-                        decimal exchangeRate = await currencyExchange.ExchangeRate(currencyCodeFrom, currencyCodeTo);
+                        _log.LogInformation($"Calling to {currencyExchange.GetType().Name} currency service");
+
+                        decimal exchangeRate = await currencyExchange.RequestExchangeRate(currencyCodeFrom, currencyCodeTo);
                         
                         _memoryCache.Set<decimal>(BuildCacheKey(currencyCodeFrom, currencyCodeTo), exchangeRate, CacheOptions);
 

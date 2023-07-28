@@ -1,7 +1,7 @@
 ﻿namespace TradingBook.ExternalServices.StockProvider.Abstract
 {
-    public interface IStockServiceProvider
+    internal interface IStockServiceProvider
     {
-        public Task<decimal> StockPrice(string stockCode);
+        public Task<decimal> RequestStockPrice(string stockCode);
     }
 }

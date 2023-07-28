@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TradingBook.ExternalServices.ExchangeProvider.Abstract
+﻿namespace TradingBook.ExternalServices.ExchangeProvider.Abstract
 {
-    public interface ICurrencyExchangeServiceManager:ICurrencyExchangeServiceProvider
+    public interface ICurrencyExchangeServiceManager
     {
+        public Task<decimal> ExchangeRate(string currencyCodeFrom, string currencyCodeTo);
     }
 }

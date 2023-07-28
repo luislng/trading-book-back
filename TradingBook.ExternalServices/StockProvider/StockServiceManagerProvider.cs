@@ -13,7 +13,7 @@ namespace TradingBook.ExternalServices.StockProvider
         private readonly IMemoryCache _memoryCache;
         private readonly ILogger<StockServiceManagerProvider> _log;
 
-        private MemoryCacheEntryOptions CacheOptions
+        private static MemoryCacheEntryOptions CacheOptions
         {
             get
             {
@@ -43,7 +43,9 @@ namespace TradingBook.ExternalServices.StockProvider
                 {
                     try
                     {
-                        decimal stockPrice = await stockService.StockPrice(stockCode);
+                        _log.LogInformation($"Calling to {stockService.GetType().Name} stock service");
+
+                        decimal stockPrice = await stockService.RequestStockPrice(stockCode);
 
                         _memoryCache.Set<decimal>(cacheKey, stockPrice, CacheOptions);
 

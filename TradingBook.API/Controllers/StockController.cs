@@ -54,6 +54,22 @@ namespace TradingBook.API.Controllers
             }
         }
 
+        [HttpGet("TotalEurEarned")]
+        [ProducesResponseType(typeof(decimal), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> TotalEurEarned()
+        {
+            try
+            {
+                decimal total = await _stockService.TotalEurEarnedAsync();                
+                return Ok(new { Amount = total });
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
+        }
+
         [HttpPost]
         [ProducesResponseType(typeof(uint), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
