@@ -33,7 +33,7 @@ namespace TradingBook.ExternalServices.Http.Implementation
                 List<string> queryParametersCollection = new List<string>();
 
                 foreach (var parameterAux in parameters)
-                {
+                {   
                     queryParametersCollection.Add($"{parameterAux.Key}={parameterAux.Value}");
                 }
 
@@ -46,6 +46,7 @@ namespace TradingBook.ExternalServices.Http.Implementation
             string url = $"{uri.ToString()}{queryParameter}";
 
             HttpResponseMessage response = await client.GetAsync(url) ?? throw new HttpRequestException();
+
             T deserializedResponse = await DeserializeResponseAsync<T>(response);
 
             return deserializedResponse;

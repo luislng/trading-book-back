@@ -61,6 +61,6 @@ namespace TradingBook.ExternalServices.ExchangeProvider
             return exchangeCachedValue;
         }
 
-        private string BuildCacheKey(string currencyFrom, string currencyTo) => $"{KEY_CACHE_EXCHANGE}_{currencyFrom}_{currencyTo}";
+        private static string BuildCacheKey(string currencyFrom, string currencyTo) => $"{KEY_CACHE_EXCHANGE}_{currencyFrom}_{currencyTo}";
     }
 }

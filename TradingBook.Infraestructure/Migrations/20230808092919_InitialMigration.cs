@@ -14,6 +14,20 @@ namespace TradingBook.Infraestructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "CryptoCurrencyReference",
+                columns: table => new
+                {
+                    Id = table.Column<uint>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Code = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CryptoCurrencyReference", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Currency",
                 columns: table => new
                 {
@@ -56,6 +70,44 @@ namespace TradingBook.Infraestructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CryptoCurrency",
+                columns: table => new
+                {
+                    Id = table.Column<uint>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    CryptoCurrencyReferenceFromId = table.Column<uint>(type: "INTEGER", nullable: false),
+                    CryptoCurrencyReferenceToId = table.Column<uint>(type: "INTEGER", nullable: false),
+                    AmountInvest = table.Column<decimal>(type: "TEXT", nullable: false),
+                    FeeInvest = table.Column<decimal>(type: "TEXT", nullable: false),
+                    CryptoPrice = table.Column<decimal>(type: "TEXT", nullable: false),
+                    ExchangedAmount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    BuyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    IsSelled = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false),
+                    ReturnPrice = table.Column<decimal>(type: "TEXT", nullable: false),
+                    SellDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    ReturnAmount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    ReturnFee = table.Column<decimal>(type: "TEXT", nullable: false),
+                    StopLoss = table.Column<decimal>(type: "TEXT", nullable: false),
+                    SellLimit = table.Column<decimal>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CryptoCurrency", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CryptoCurrency_CryptoCurrencyReference_CryptoCurrencyReferenceFromId",
+                        column: x => x.CryptoCurrencyReferenceFromId,
+                        principalTable: "CryptoCurrencyReference",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CryptoCurrency_CryptoCurrencyReference_CryptoCurrencyReferenceToId",
+                        column: x => x.CryptoCurrencyReferenceToId,
+                        principalTable: "CryptoCurrencyReference",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Stock",
                 columns: table => new
                 {
@@ -93,6 +145,16 @@ namespace TradingBook.Infraestructure.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "CryptoCurrencyReference",
+                columns: new[] { "Id", "Code", "Name" },
+                values: new object[,]
+                {
+                    { 1u, "BTC", "Bitcoin" },
+                    { 2u, "ETH", "Ethereum" },
+                    { 3u, "EUR", "Eur" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Currency",
                 columns: new[] { "Id", "Code", "Name" },
                 values: new object[,]
@@ -111,6 +173,16 @@ namespace TradingBook.Infraestructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_CryptoCurrency_CryptoCurrencyReferenceFromId",
+                table: "CryptoCurrency",
+                column: "CryptoCurrencyReferenceFromId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CryptoCurrency_CryptoCurrencyReferenceToId",
+                table: "CryptoCurrency",
+                column: "CryptoCurrencyReferenceToId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Stock_CurrencyId",
                 table: "Stock",
                 column: "CurrencyId");
@@ -125,10 +197,16 @@ namespace TradingBook.Infraestructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CryptoCurrency");
+
+            migrationBuilder.DropTable(
                 name: "Deposit");
 
             migrationBuilder.DropTable(
                 name: "Stock");
+
+            migrationBuilder.DropTable(
+                name: "CryptoCurrencyReference");
 
             migrationBuilder.DropTable(
                 name: "Currency");

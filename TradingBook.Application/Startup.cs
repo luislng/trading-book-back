@@ -1,4 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using TradingBook.Application.Services.CryptoCurrency.Abstract;
+using TradingBook.Application.Services.CryptoCurrency.Implementation;
+using TradingBook.Application.Services.CryptoCurrencyReference.Abstract;
+using TradingBook.Application.Services.CryptoCurrencyReference.Implementation;
 using TradingBook.Application.Services.Currency.Abstract;
 using TradingBook.Application.Services.Currency.Implementation;
 using TradingBook.Application.Services.Deposit.Abstract;
@@ -22,6 +26,8 @@ namespace TradingBook.Application
             services.AddScoped<ICurrencyService, CurrencyService>();
             services.AddScoped<IStockService, StockService>();
             services.AddScoped<IDepositService, DepositService>();
+            services.AddScoped<ICryptoCurrencyService, CryptoCurrencyService>();
+            services.AddScoped<ICryptoCurrencyReferenceService, CryptoCurrencyReferenceService>();
 
             return services;
         }

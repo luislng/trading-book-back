@@ -14,6 +14,8 @@ namespace TradingBook.Infraestructure.Context
             modelBuilder.ConfigureCurrencyModel();
             modelBuilder.ConfigureStockModel();
             modelBuilder.ConfigureDepositModel();
+            modelBuilder.ConfigureCryptoModel();
+            modelBuilder.ConfigureCryptoReferenceModel();
 
             base.OnModelCreating(modelBuilder);
 
@@ -27,5 +29,9 @@ namespace TradingBook.Infraestructure.Context
         public DbSet<StockEntity> Stock { get; set; }
 
         public DbSet<DepositEntity> Deposit { get; set; }
+
+        public DbSet<CryptoCurrencyEntity> CryptoCurrency { get; set; } 
+
+        public DbSet<CryptoCurrencyReferenceEntity> CryptoCurrencyReference { get; set; }
     }
 }

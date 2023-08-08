@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TradingBook.Infraestructure.Context;
+using TradingBook.Infraestructure.Repository.CryptoCurrencyReferenceRepository;
+using TradingBook.Infraestructure.Repository.CryptoCurrencyRepository;
 using TradingBook.Infraestructure.Repository.CurrencyRepository;
 using TradingBook.Infraestructure.Repository.DepositRepository;
 using TradingBook.Infraestructure.Repository.Factory;
@@ -22,13 +24,15 @@ namespace TradingBook.Infraestructure
 
             services.AddDbContext<SqliteDbContext>(opt => opt.UseSqlite(connectionString));
                         
-            services.AddScoped<IRepositoryFactory, RepositoryFactory>();
-            services.AddScoped<IUnitOfWork, SqliteUnitOfWork>();
+            services.AddTransient<IRepositoryFactory, RepositoryFactory>();
+            services.AddTransient<IUnitOfWork, SqliteUnitOfWork>();
 
-            services.AddScoped<ICurrencyRepository, CurrencyRepository>();            
-            services.AddScoped<IStockReferenceRepository, StockReferenceRepository>();
-            services.AddScoped<IStockRepository, StockRepository>();
-            services.AddScoped<IDepositRepository, DepositRepository>();
+            services.AddTransient<ICurrencyRepository, CurrencyRepository>();            
+            services.AddTransient<IStockReferenceRepository, StockReferenceRepository>();
+            services.AddTransient<IStockRepository, StockRepository>();
+            services.AddTransient<IDepositRepository, DepositRepository>();
+            services.AddTransient<ICryptoCurrencyRepository, CryptoCurrencyRepository>();
+            services.AddTransient<ICryptoCurrencyReferenceRepository, CryptoCurrencyReferenceRepository>();
 
             return services;
         }

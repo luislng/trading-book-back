@@ -1,15 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TradingBook.ExternalServices.Http.Abstract;
-using TradingBook.ExternalServices.Http.Implementation;
 using TradingBook.ExternalServices.StockProvider.Abstract;
 using TradingBook.ExternalServices.StockProvider.FinnHubProvider.Model;
-using TradingBook.ExternalServices.StockProvider.MarketStackProvider;
-using TradingBook.ExternalServices.StockProvider.MarketStackProvider.Model;
 
 namespace TradingBook.ExternalServices.StockProvider.FinnHubProvider.Implementation
 {

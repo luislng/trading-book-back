@@ -116,16 +116,20 @@ namespace TradingBook.Application.Services.Stock.Implementation
             {
                 stockAux.Deposit = stockAux.Amount - stockAux.Fee;
 
-                decimal stockPrice = await _stockProviderService.StockPrice(stockEntity.StockReference?.Code);
-                
-                stockAux.CurrentPrice = stockPrice;
+                if (!stockAux.IsSelled)
+                {
+                    decimal stockPrice = await _stockProviderService.StockPrice(stockEntity.StockReference?.Code);
 
-                stockAux.PercentajeDiff = ((stockAux.CurrentPrice - stockAux.Price) / stockAux.Price) * 100M;
+                    stockAux.CurrentPrice = stockPrice;
 
-                if ((stockAux.CurrentPrice >= stockAux.SellLimit) || (stockAux.CurrentPrice <= stockAux.StopLoss))
-                    stockAux.RecomendedAction = InvestActions.SELL;
-                else
-                    stockAux.RecomendedAction = InvestActions.HOLD;
+                    if(stockAux.Price != 0.0M)
+                        stockAux.PercentajeDiff = ((stockAux.CurrentPrice - stockAux.Price) / stockAux.Price) * 100M;
+
+                    if ((stockAux.CurrentPrice >= stockAux.SellLimit) || (stockAux.CurrentPrice <= stockAux.StopLoss))
+                        stockAux.RecomendedAction = InvestActions.SELL;
+                    else
+                        stockAux.RecomendedAction = InvestActions.HOLD;
+                }                
 
                 if (stockAux.IsSelled)
                 {

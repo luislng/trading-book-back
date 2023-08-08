@@ -10,6 +10,9 @@ namespace TradingBook.Infraestructure.Context
         public static ModelBuilder ConfigureStockReferenceModel(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<StockReferenceEntity>()
+                     .HasKey(x => x.Id);
+
+            modelBuilder.Entity<StockReferenceEntity>()
                        .Property(x => x.Name)
                        .IsRequired()
                        .HasMaxLength(MAX_LENGTH_ASSET_STRING);
@@ -25,6 +28,9 @@ namespace TradingBook.Infraestructure.Context
         public static ModelBuilder ConfigureCurrencyModel(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CurrencyEntity>()
+                       .HasKey(x => x.Id);
+
+            modelBuilder.Entity<CurrencyEntity>()
                        .Property(x => x.Name)
                        .IsRequired()
                        .HasMaxLength(MAX_LENGTH_ASSET_STRING);
@@ -39,6 +45,9 @@ namespace TradingBook.Infraestructure.Context
 
         public static ModelBuilder ConfigureStockModel(this ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<StockEntity>()
+                        .HasKey(x => x.Id);
+
             modelBuilder.Entity<StockEntity>()
                         .HasOne(x => x.StockReference)
                         .WithMany(x => x.Stocks)
@@ -63,6 +72,9 @@ namespace TradingBook.Infraestructure.Context
         public static ModelBuilder ConfigureDepositModel(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<DepositEntity>()
+                        .HasKey(x => x.Id);
+
+            modelBuilder.Entity<DepositEntity>()
                         .Property(x => x.Deposit)
                         .IsRequired(true)
                         .HasDefaultValue(0.0M);
@@ -70,6 +82,40 @@ namespace TradingBook.Infraestructure.Context
             modelBuilder.Entity<DepositEntity>()
                      .Property(x => x.DepositDate)
                      .IsRequired(true);
+
+            return modelBuilder;
+        }
+
+        public static ModelBuilder ConfigureCryptoModel(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CryptoCurrencyEntity>()
+                        .HasKey(x => x.Id);
+
+            modelBuilder.Entity<CryptoCurrencyEntity>()
+                       .HasOne(x => x.CryptoCurrencyReferenceFrom)
+                       .WithMany(x => x.CryptoCurrenciesFrom)
+                       .HasForeignKey(x => x.CryptoCurrencyReferenceFromId)
+                       .OnDelete(DeleteBehavior.Restrict)
+                       .IsRequired();
+
+            modelBuilder.Entity<CryptoCurrencyEntity>()
+                     .HasOne(x => x.CryptoCurrencyReferenceTo)
+                     .WithMany(x => x.CryptoCurrenciesTo)
+                     .HasForeignKey(x => x.CryptoCurrencyReferenceToId)
+                     .OnDelete(DeleteBehavior.Restrict)
+                     .IsRequired();
+
+            modelBuilder.Entity<CryptoCurrencyEntity>()
+                        .Property(x => x.IsSelled)
+                        .HasDefaultValue(false);
+
+            return modelBuilder;
+        }
+
+        public static ModelBuilder ConfigureCryptoReferenceModel(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CryptoCurrencyReferenceEntity>()
+                        .HasKey(x => x.Id);
 
             return modelBuilder;
         }

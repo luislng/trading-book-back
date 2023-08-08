@@ -1,4 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using TradingBook.ExternalServices.CryptoExchange;
+using TradingBook.ExternalServices.CryptoExchange.Abstract;
+using TradingBook.ExternalServices.CryptoExchange.Binance.Implementation;
 using TradingBook.ExternalServices.ExchangeProvider;
 using TradingBook.ExternalServices.ExchangeProvider.Abstract;
 using TradingBook.ExternalServices.ExchangeProvider.AlphaVantage.Implementation;
@@ -25,7 +28,10 @@ namespace TradingBook.ExternalServices
 
             services.AddTransient<IStockServiceProvider, MarketStackService>();
             services.AddTransient<IStockServiceProvider, FinHubProviderService>();
-            services.AddTransient<IStockServiceManager, StockServiceManagerProvider>();            
+            services.AddTransient<IStockServiceManager, StockServiceManagerProvider>();
+
+            services.AddTransient<ICryptoExchangeService, BinanceApiCryptoSpotPriceService>();
+            services.AddTransient<ICryptoExchangeServiceManager, CryptoExchangeServiceManagerProvider>();
 
             return services;
         }

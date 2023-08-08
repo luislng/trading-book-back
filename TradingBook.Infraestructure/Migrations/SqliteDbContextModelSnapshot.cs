@@ -17,6 +17,104 @@ namespace TradingBook.Infraestructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.8");
 
+            modelBuilder.Entity("TradingBook.Model.Entity.CryptoCurrencyEntity", b =>
+                {
+                    b.Property<uint>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("AmountInvest")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("BuyDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<uint>("CryptoCurrencyReferenceFromId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<uint>("CryptoCurrencyReferenceToId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("CryptoPrice")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("ExchangedAmount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("FeeInvest")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsSelled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(false);
+
+                    b.Property<decimal>("ReturnAmount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("ReturnFee")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("ReturnPrice")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset?>("SellDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("SellLimit")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("StopLoss")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CryptoCurrencyReferenceFromId");
+
+                    b.HasIndex("CryptoCurrencyReferenceToId");
+
+                    b.ToTable("CryptoCurrency");
+                });
+
+            modelBuilder.Entity("TradingBook.Model.Entity.CryptoCurrencyReferenceEntity", b =>
+                {
+                    b.Property<uint>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CryptoCurrencyReference");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1u,
+                            Code = "BTC",
+                            Name = "Bitcoin"
+                        },
+                        new
+                        {
+                            Id = 2u,
+                            Code = "ETH",
+                            Name = "Ethereum"
+                        },
+                        new
+                        {
+                            Id = 3u,
+                            Code = "EUR",
+                            Name = "Eur"
+                        });
+                });
+
             modelBuilder.Entity("TradingBook.Model.Entity.CurrencyEntity", b =>
                 {
                     b.Property<uint>("Id")
@@ -162,6 +260,25 @@ namespace TradingBook.Infraestructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("TradingBook.Model.Entity.CryptoCurrencyEntity", b =>
+                {
+                    b.HasOne("TradingBook.Model.Entity.CryptoCurrencyReferenceEntity", "CryptoCurrencyReferenceFrom")
+                        .WithMany("CryptoCurrenciesFrom")
+                        .HasForeignKey("CryptoCurrencyReferenceFromId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TradingBook.Model.Entity.CryptoCurrencyReferenceEntity", "CryptoCurrencyReferenceTo")
+                        .WithMany("CryptoCurrenciesTo")
+                        .HasForeignKey("CryptoCurrencyReferenceToId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CryptoCurrencyReferenceFrom");
+
+                    b.Navigation("CryptoCurrencyReferenceTo");
+                });
+
             modelBuilder.Entity("TradingBook.Model.Entity.StockEntity", b =>
                 {
                     b.HasOne("TradingBook.Model.Entity.CurrencyEntity", "Currency")
@@ -179,6 +296,13 @@ namespace TradingBook.Infraestructure.Migrations
                     b.Navigation("Currency");
 
                     b.Navigation("StockReference");
+                });
+
+            modelBuilder.Entity("TradingBook.Model.Entity.CryptoCurrencyReferenceEntity", b =>
+                {
+                    b.Navigation("CryptoCurrenciesFrom");
+
+                    b.Navigation("CryptoCurrenciesTo");
                 });
 
             modelBuilder.Entity("TradingBook.Model.Entity.CurrencyEntity", b =>
