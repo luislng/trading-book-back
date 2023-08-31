@@ -129,9 +129,8 @@ namespace TradingBook.Application.Services.Stock.Implementation
                         stockAux.RecomendedAction = InvestActions.SELL;
                     else
                         stockAux.RecomendedAction = InvestActions.HOLD;
-                }                
-
-                if (stockAux.IsSelled)
+                }
+                else
                 {
                     stockAux.ReturnStockDiffPricePercentaje = ((stockAux.ReturnStockPrice - stockAux.Price) / stockAux.Price) * 100M;
 
@@ -140,8 +139,7 @@ namespace TradingBook.Application.Services.Stock.Implementation
                     stockAux.ReturnEarn = stockAux.ReturnAmountWithFee - stockAux.Amount;
 
                     stockAux.ReturnDiffAmount = ((stockAux.ReturnAmountWithFee - stockAux.Amount) / stockAux.Amount) * 100M;
-                }
-
+                }                
             }catch(Exception e)
             {
                 _logger.LogError(e.Message);

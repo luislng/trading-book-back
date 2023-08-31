@@ -21,16 +21,18 @@ namespace TradingBook.Infraestructure.Repository.CryptoCurrencyRepository
         public async Task<List<CryptoCurrencyEntity>> GetAllAsync()
         {
             return await _context.CryptoCurrency.AsNoTracking()
-                                                .Include(x => x.CryptoCurrencyReferenceFrom)
-                                                .Include(x => x.CryptoCurrencyReferenceTo)
+                                                .Include(x => x.CurrencyFrom)
+                                                .Include(x => x.CurrencyTo)
+                                                .Include(x => x.CryptoReference)
                                                 .ToListAsync();
         }
 
         public async Task<CryptoCurrencyEntity> GetById(uint id)
         {
             return await _context.CryptoCurrency
-                                 .Include(x=>x.CryptoCurrencyReferenceFrom)
-                                 .Include(x => x.CryptoCurrencyReferenceTo)
+                                 .Include(x => x.CurrencyFrom)
+                                 .Include(x => x.CurrencyTo)
+                                 .Include(x => x.CryptoReference)
                                  .Where(x => x.Id == id)
                                  .FirstOrDefaultAsync();
         }
@@ -39,8 +41,9 @@ namespace TradingBook.Infraestructure.Repository.CryptoCurrencyRepository
         {
             return await _context.CryptoCurrency.Where(x => x.IsSelled)
                                    .AsNoTracking()
-                                   .Include(x => x.CryptoCurrencyReferenceFrom)
-                                   .Include(x => x.CryptoCurrencyReferenceTo)
+                                   .Include(x => x.CurrencyFrom)
+                                   .Include(x => x.CurrencyTo)
+                                   .Include(x => x.CryptoReference)
                                    .ToListAsync();
         }
 

@@ -29,14 +29,17 @@ namespace TradingBook.Infraestructure.Migrations
                     b.Property<DateTimeOffset>("BuyDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<uint>("CryptoCurrencyReferenceFromId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<uint>("CryptoCurrencyReferenceToId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<decimal>("CryptoPrice")
                         .HasColumnType("TEXT");
+
+                    b.Property<uint>("CryptoReferenceId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<uint>("CurrencyFromId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<uint>("CurrencyToId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("ExchangedAmount")
                         .HasColumnType("TEXT");
@@ -69,9 +72,11 @@ namespace TradingBook.Infraestructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CryptoCurrencyReferenceFromId");
+                    b.HasIndex("CryptoReferenceId");
 
-                    b.HasIndex("CryptoCurrencyReferenceToId");
+                    b.HasIndex("CurrencyFromId");
+
+                    b.HasIndex("CurrencyToId");
 
                     b.ToTable("CryptoCurrency");
                 });
@@ -98,20 +103,14 @@ namespace TradingBook.Infraestructure.Migrations
                         new
                         {
                             Id = 1u,
-                            Code = "BTC",
-                            Name = "Bitcoin"
+                            Code = "BTCEUR",
+                            Name = "BTC-EUR"
                         },
                         new
                         {
                             Id = 2u,
-                            Code = "ETH",
-                            Name = "Ethereum"
-                        },
-                        new
-                        {
-                            Id = 3u,
-                            Code = "EUR",
-                            Name = "Eur"
+                            Code = "SUIEUR",
+                            Name = "SUI-EUR"
                         });
                 });
 
@@ -147,6 +146,24 @@ namespace TradingBook.Infraestructure.Migrations
                             Id = 2u,
                             Code = "USD",
                             Name = "Dollar"
+                        },
+                        new
+                        {
+                            Id = 3u,
+                            Code = "BTC",
+                            Name = "BTC"
+                        },
+                        new
+                        {
+                            Id = 4u,
+                            Code = "SUI",
+                            Name = "SUI"
+                        },
+                        new
+                        {
+                            Id = 5u,
+                            Code = "GTC",
+                            Name = "GTC"
                         });
                 });
 
@@ -262,21 +279,29 @@ namespace TradingBook.Infraestructure.Migrations
 
             modelBuilder.Entity("TradingBook.Model.Entity.CryptoCurrencyEntity", b =>
                 {
-                    b.HasOne("TradingBook.Model.Entity.CryptoCurrencyReferenceEntity", "CryptoCurrencyReferenceFrom")
+                    b.HasOne("TradingBook.Model.Entity.CryptoCurrencyReferenceEntity", "CryptoReference")
+                        .WithMany("CryptoCurrencyReferences")
+                        .HasForeignKey("CryptoReferenceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TradingBook.Model.Entity.CurrencyEntity", "CurrencyFrom")
                         .WithMany("CryptoCurrenciesFrom")
-                        .HasForeignKey("CryptoCurrencyReferenceFromId")
+                        .HasForeignKey("CurrencyFromId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TradingBook.Model.Entity.CryptoCurrencyReferenceEntity", "CryptoCurrencyReferenceTo")
+                    b.HasOne("TradingBook.Model.Entity.CurrencyEntity", "CurrencyTo")
                         .WithMany("CryptoCurrenciesTo")
-                        .HasForeignKey("CryptoCurrencyReferenceToId")
+                        .HasForeignKey("CurrencyToId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("CryptoCurrencyReferenceFrom");
+                    b.Navigation("CryptoReference");
 
-                    b.Navigation("CryptoCurrencyReferenceTo");
+                    b.Navigation("CurrencyFrom");
+
+                    b.Navigation("CurrencyTo");
                 });
 
             modelBuilder.Entity("TradingBook.Model.Entity.StockEntity", b =>
@@ -300,13 +325,15 @@ namespace TradingBook.Infraestructure.Migrations
 
             modelBuilder.Entity("TradingBook.Model.Entity.CryptoCurrencyReferenceEntity", b =>
                 {
-                    b.Navigation("CryptoCurrenciesFrom");
-
-                    b.Navigation("CryptoCurrenciesTo");
+                    b.Navigation("CryptoCurrencyReferences");
                 });
 
             modelBuilder.Entity("TradingBook.Model.Entity.CurrencyEntity", b =>
                 {
+                    b.Navigation("CryptoCurrenciesFrom");
+
+                    b.Navigation("CryptoCurrenciesTo");
+
                     b.Navigation("Stocks");
                 });
 

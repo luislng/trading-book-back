@@ -58,6 +58,20 @@ namespace TradingBook.ExternalServices.CryptoExchange
             return spotPrice;
         }
 
+        public async Task<bool> CheckIfCodeExists(string cryptoCode)
+        {
+            try
+            {
+                CryptoExchangeSpotPrice price = await SpotPrice(cryptoCode);
+
+                return price?.SpotPrice.HasValue ?? false;
+            }
+            catch (Exception) 
+            {
+                return false;
+            }
+        }
+
         private static string BuildCacheKey(string cryptoCode) => $"{KEY_CACHE}_{cryptoCode}";
     }  
 }

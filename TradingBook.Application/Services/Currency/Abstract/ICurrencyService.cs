@@ -11,5 +11,7 @@ namespace TradingBook.Application.Services.Currency.Abstract
         public Task DeleteAsync(uint id);
 
         public Task<ExchangeDto> ExchangeAsync(decimal amount, string currencyCodeFrom, string currencyCodeTo);
+
+        public Task<bool> CheckIfCurrencyCodeIsAvailable(string currencyCode);
     }
 }

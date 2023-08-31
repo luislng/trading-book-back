@@ -33,6 +33,13 @@ namespace TradingBook.API.Controllers
             }
         }
 
+        [HttpGet("CheckIfReferenceExists")]
+        [ProducesResponseType(typeof(Boolean), StatusCodes.Status200OK)]
+        public async Task<IActionResult> CheckIfReferenceCodeExists([Required][FromQuery]string referenceCode)
+        {
+            return Ok(await _cryptoCurrencyRefService.CheckIfCryptoRefExist(referenceCode)); 
+        }
+
         [HttpPost]
         [ProducesResponseType(typeof(CryptoCurrencyReferenceDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]

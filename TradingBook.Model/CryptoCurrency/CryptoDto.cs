@@ -8,6 +8,8 @@
 
         public string CryptoCurrencyTo { get; set; }
 
+        public string CryptoReference { get; set; }
+
         public decimal AmountInvest { get; set; }
 
         public decimal FeeInvest { get; set; }
@@ -20,9 +22,9 @@
 
         public decimal ExchangedAmount { get; set; }
 
-        public decimal CurrentPrice { get; set; }
+        public decimal? CurrentPrice { get; set; }
 
-        public decimal CurrentDiffPercentage { get; set; }
+        public decimal? CurrentDiffPercentage { get; set; }
 
         public string RecomendedAction { get; set; } = String.Empty;
 

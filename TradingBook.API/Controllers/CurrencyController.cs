@@ -34,6 +34,13 @@ namespace TradingBook.API.Controllers
             }            
         }
 
+        [HttpGet("CheckIfCurrencyCodeExists")]
+        [ProducesResponseType(typeof(Boolean), StatusCodes.Status200OK)]
+        public async Task<IActionResult> CheckIfCurrencyCodeExists([Required][FromQuery]string currencyCode)
+        {
+            return Ok(await _currencyService.CheckIfCurrencyCodeIsAvailable(currencyCode));   
+        }
+
         [HttpPost]
         [ProducesResponseType(typeof(CurrencyDto),StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]

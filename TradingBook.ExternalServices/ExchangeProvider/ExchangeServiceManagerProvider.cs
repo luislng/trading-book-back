@@ -61,6 +61,20 @@ namespace TradingBook.ExternalServices.ExchangeProvider
             return exchangeCachedValue;
         }
 
+        public async Task<bool> CheckIfCurrencyCodeExists(string currencyCode)
+        {
+            try
+            {
+                decimal result = await ExchangeRate(currencyCode, currencyCode);
+                return result != 0.0M;
+            }
+            catch(Exception)
+            {
+                return false;    
+            }
+        }
+
         private static string BuildCacheKey(string currencyFrom, string currencyTo) => $"{KEY_CACHE_EXCHANGE}_{currencyFrom}_{currencyTo}";
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using TradingBook.Application.Services.StockReference.Abstract;
+using TradingBook.ExternalServices.StockProvider.Abstract;
 using TradingBook.Infraestructure.Repository.StockReferenceRepository;
 using TradingBook.Infraestructure.UnitOfWork;
 using TradingBook.Model.Stock;
@@ -10,11 +11,18 @@ namespace TradingBook.Application.Services.StockReference.Implementation
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IStockServiceManager _stockProviderService;
 
-        public StockReferenceService(IUnitOfWork unitOfWork, IMapper mapper)
+        public StockReferenceService(IUnitOfWork unitOfWork, IMapper mapper, IStockServiceManager stockProviderService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(IUnitOfWork));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(IMapper));
+            _stockProviderService = stockProviderService ?? throw new ArgumentNullException(nameof(IStockServiceManager));
+        }
+
+        public async Task<bool> CheckIfStockExists(string code)
+        {
+            return await _stockProviderService.CheckIfCodeExists(code);
         }
 
         public async Task DeleteAsync(uint id)

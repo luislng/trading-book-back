@@ -63,6 +63,20 @@ namespace TradingBook.ExternalServices.StockProvider
             return stockValue;
         }
 
+        public async Task<bool> CheckIfCodeExists(string stockCode)
+        {
+            try
+            {
+                decimal price = await StockPrice(stockCode);
+
+                return price != 0.0M;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         private static string BuildCacheKey(string stockCode) => $"{CACHE_STOCK_KEY}_{stockCode}";
     }
 }

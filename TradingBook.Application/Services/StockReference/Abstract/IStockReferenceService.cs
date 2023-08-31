@@ -8,6 +8,8 @@ namespace TradingBook.Application.Services.StockReference.Abstract
 
         public Task<List<StockReferenceDto>> GetAllAssetsAsync();
 
-        public Task DeleteAsync(uint id);        
+        public Task DeleteAsync(uint id);
+
+        public Task<bool> CheckIfStockExists(string code);
     }
 }

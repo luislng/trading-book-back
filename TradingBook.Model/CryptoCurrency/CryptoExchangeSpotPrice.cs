@@ -4,6 +4,6 @@
     {
         public string CryptoCode { get; set; } = String.Empty;
 
-        public decimal SpotPrice { get; set; }  
+        public decimal? SpotPrice { get; set; } = null;
     }
 }

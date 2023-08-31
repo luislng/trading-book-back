@@ -6,8 +6,6 @@
 
         public string Name { get; set; }
 
-        public virtual ICollection<CryptoCurrencyEntity>? CryptoCurrenciesFrom { get; set; }
-
-        public virtual ICollection<CryptoCurrencyEntity>? CryptoCurrenciesTo { get; set; }
+        public virtual ICollection<CryptoCurrencyEntity>? CryptoCurrencyReferences { get; set; }
     }
 }

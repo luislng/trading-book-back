@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using TradingBook.Application.Services.CryptoCurrencyReference.Abstract;
+using TradingBook.ExternalServices.CryptoExchange.Abstract;
 using TradingBook.Infraestructure.Repository.CryptoCurrencyReferenceRepository;
 using TradingBook.Infraestructure.UnitOfWork;
 using TradingBook.Model.CryptoCurrency;
@@ -13,12 +14,20 @@ namespace TradingBook.Application.Services.CryptoCurrencyReference.Implementatio
         private readonly ILogger<CryptoCurrencyReferenceService> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICryptoExchangeServiceManager _cryptoExchangeServiceManager;
 
-        public CryptoCurrencyReferenceService(ILogger<CryptoCurrencyReferenceService> logger,IUnitOfWork unitOfWork,IMapper mapper)
+        public CryptoCurrencyReferenceService(ILogger<CryptoCurrencyReferenceService> logger,IUnitOfWork unitOfWork,IMapper mapper,
+                                              ICryptoExchangeServiceManager cryptoExchangeServiceManager)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(ILogger));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(IUnitOfWork));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(IMapper));
+            _cryptoExchangeServiceManager = cryptoExchangeServiceManager ?? throw new ArgumentNullException(nameof(ICryptoExchangeServiceManager));
+        }
+
+        public async Task<bool> CheckIfCryptoRefExist(string cryptoCode)
+        {
+            return await _cryptoExchangeServiceManager.CheckIfCodeExists(cryptoCode);
         }
 
         public async Task DeleteAsync(uint id)

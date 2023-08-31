@@ -9,5 +9,7 @@ namespace TradingBook.Application.Services.CryptoCurrencyReference.Abstract
         public Task<List<CryptoCurrencyReferenceDto>> GetAllAsync();
 
         public Task DeleteAsync(uint id);
+
+        public Task<bool> CheckIfCryptoRefExist(string cryptoCode);
     }
 }

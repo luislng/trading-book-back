@@ -2,13 +2,17 @@
 {
     public class CryptoCurrencyEntity : EntityBase
     {
-        public uint CryptoCurrencyReferenceFromId { get; set; }
+        public uint CurrencyFromId { get; set; }    
 
-        public CryptoCurrencyReferenceEntity CryptoCurrencyReferenceFrom { get; set; }
+        public CurrencyEntity CurrencyFrom { get; set; }
 
-        public uint CryptoCurrencyReferenceToId { get; set; }
+        public uint CurrencyToId { get; set; }
 
-        public CryptoCurrencyReferenceEntity CryptoCurrencyReferenceTo { get; set; }
+        public CurrencyEntity CurrencyTo { get; set; }
+
+        public uint CryptoReferenceId { get; set; }
+
+        public CryptoCurrencyReferenceEntity CryptoReference { get; set; }
 
         public decimal AmountInvest { get; set; }
 

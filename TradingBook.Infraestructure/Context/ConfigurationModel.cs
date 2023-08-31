@@ -92,18 +92,25 @@ namespace TradingBook.Infraestructure.Context
                         .HasKey(x => x.Id);
 
             modelBuilder.Entity<CryptoCurrencyEntity>()
-                       .HasOne(x => x.CryptoCurrencyReferenceFrom)
+                       .HasOne(x => x.CurrencyFrom)
                        .WithMany(x => x.CryptoCurrenciesFrom)
-                       .HasForeignKey(x => x.CryptoCurrencyReferenceFromId)
+                       .HasForeignKey(x => x.CurrencyFromId)
                        .OnDelete(DeleteBehavior.Restrict)
                        .IsRequired();
 
             modelBuilder.Entity<CryptoCurrencyEntity>()
-                     .HasOne(x => x.CryptoCurrencyReferenceTo)
+                     .HasOne(x => x.CurrencyTo)
                      .WithMany(x => x.CryptoCurrenciesTo)
-                     .HasForeignKey(x => x.CryptoCurrencyReferenceToId)
+                     .HasForeignKey(x => x.CurrencyToId)
                      .OnDelete(DeleteBehavior.Restrict)
                      .IsRequired();
+
+            modelBuilder.Entity<CryptoCurrencyEntity>()
+                   .HasOne(x => x.CryptoReference)
+                   .WithMany(x => x.CryptoCurrencyReferences)
+                   .HasForeignKey(x => x.CryptoReferenceId)
+                   .OnDelete(DeleteBehavior.Restrict)
+                   .IsRequired();
 
             modelBuilder.Entity<CryptoCurrencyEntity>()
                         .Property(x => x.IsSelled)

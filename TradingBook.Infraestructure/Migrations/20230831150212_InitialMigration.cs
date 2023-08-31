@@ -75,8 +75,9 @@ namespace TradingBook.Infraestructure.Migrations
                 {
                     Id = table.Column<uint>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    CryptoCurrencyReferenceFromId = table.Column<uint>(type: "INTEGER", nullable: false),
-                    CryptoCurrencyReferenceToId = table.Column<uint>(type: "INTEGER", nullable: false),
+                    CurrencyFromId = table.Column<uint>(type: "INTEGER", nullable: false),
+                    CurrencyToId = table.Column<uint>(type: "INTEGER", nullable: false),
+                    CryptoReferenceId = table.Column<uint>(type: "INTEGER", nullable: false),
                     AmountInvest = table.Column<decimal>(type: "TEXT", nullable: false),
                     FeeInvest = table.Column<decimal>(type: "TEXT", nullable: false),
                     CryptoPrice = table.Column<decimal>(type: "TEXT", nullable: false),
@@ -94,15 +95,21 @@ namespace TradingBook.Infraestructure.Migrations
                 {
                     table.PrimaryKey("PK_CryptoCurrency", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CryptoCurrency_CryptoCurrencyReference_CryptoCurrencyReferenceFromId",
-                        column: x => x.CryptoCurrencyReferenceFromId,
+                        name: "FK_CryptoCurrency_CryptoCurrencyReference_CryptoReferenceId",
+                        column: x => x.CryptoReferenceId,
                         principalTable: "CryptoCurrencyReference",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_CryptoCurrency_CryptoCurrencyReference_CryptoCurrencyReferenceToId",
-                        column: x => x.CryptoCurrencyReferenceToId,
-                        principalTable: "CryptoCurrencyReference",
+                        name: "FK_CryptoCurrency_Currency_CurrencyFromId",
+                        column: x => x.CurrencyFromId,
+                        principalTable: "Currency",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CryptoCurrency_Currency_CurrencyToId",
+                        column: x => x.CurrencyToId,
+                        principalTable: "Currency",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -149,9 +156,8 @@ namespace TradingBook.Infraestructure.Migrations
                 columns: new[] { "Id", "Code", "Name" },
                 values: new object[,]
                 {
-                    { 1u, "BTC", "Bitcoin" },
-                    { 2u, "ETH", "Ethereum" },
-                    { 3u, "EUR", "Eur" }
+                    { 1u, "BTCEUR", "BTC-EUR" },
+                    { 2u, "SUIEUR", "SUI-EUR" }
                 });
 
             migrationBuilder.InsertData(
@@ -160,7 +166,10 @@ namespace TradingBook.Infraestructure.Migrations
                 values: new object[,]
                 {
                     { 1u, "EUR", "Euro" },
-                    { 2u, "USD", "Dollar" }
+                    { 2u, "USD", "Dollar" },
+                    { 3u, "BTC", "BTC" },
+                    { 4u, "SUI", "SUI" },
+                    { 5u, "GTC", "GTC" }
                 });
 
             migrationBuilder.InsertData(
@@ -173,14 +182,19 @@ namespace TradingBook.Infraestructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CryptoCurrency_CryptoCurrencyReferenceFromId",
+                name: "IX_CryptoCurrency_CryptoReferenceId",
                 table: "CryptoCurrency",
-                column: "CryptoCurrencyReferenceFromId");
+                column: "CryptoReferenceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CryptoCurrency_CryptoCurrencyReferenceToId",
+                name: "IX_CryptoCurrency_CurrencyFromId",
                 table: "CryptoCurrency",
-                column: "CryptoCurrencyReferenceToId");
+                column: "CurrencyFromId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CryptoCurrency_CurrencyToId",
+                table: "CryptoCurrency",
+                column: "CurrencyToId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Stock_CurrencyId",

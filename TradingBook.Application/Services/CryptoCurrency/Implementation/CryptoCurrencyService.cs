@@ -85,16 +85,17 @@ namespace TradingBook.Application.Services.CryptoCurrency.Implementation
 
         public async Task<decimal> TotalEurEarnedAsync()
         {
-            ICryptoCurrencyRepository repository = _unitOfWork.GetRepository<ICryptoCurrencyRepository>();
-            List<CryptoCurrencyEntity> cryptoSelled = await repository.GetCryptoSelled();
+            return 0;
+           // ICryptoCurrencyRepository repository = _unitOfWork.GetRepository<ICryptoCurrencyRepository>();
+           // List<CryptoCurrencyEntity> cryptoSelled = await repository.GetCryptoSelled();
 
-           decimal cryptoEarnedEuro = cryptoSelled.Where(x => x.CryptoCurrencyReferenceFrom.Code == "EUR")
-                                                  .Select(x=> ((x.ReturnAmount - x.ReturnFee) - x.AmountInvest))
-                                                  .Sum();
+           //decimal cryptoEarnedEuro = cryptoSelled.Where(x => x.CryptoCurrencyReferenceFrom.Code == "EUR")
+           //                                       .Select(x=> ((x.ReturnAmount - x.ReturnFee) - x.AmountInvest))
+           //                                       .Sum();
 
 
 
-            return cryptoEarnedEuro;
+           // return cryptoEarnedEuro;
         }
 
         public async Task<uint> UpdateMarketLimitAsync(MarketLimitsDto marketLimits)
@@ -130,16 +131,19 @@ namespace TradingBook.Application.Services.CryptoCurrency.Implementation
                 }
                 else
                 {
-                    CryptoExchangeSpotPrice cryptoSpotPrice = await _cryptoExchangeServiceManager.SpotPrice(cryptoCurrency.CryptoCurrencyReferenceTo.Code);
-                    cryptoDto.CurrentPrice = cryptoSpotPrice.SpotPrice;
+                    CryptoExchangeSpotPrice cryptoSpotPrice = await _cryptoExchangeServiceManager.SpotPrice(cryptoCurrency.CryptoReference.Code);
+                    cryptoDto.CurrentPrice = cryptoSpotPrice?.SpotPrice;
 
-                    if (cryptoDto.CryptoPrice != 0.0M)
-                        cryptoDto.CurrentDiffPercentage = ((cryptoDto.CurrentPrice - cryptoDto.CryptoPrice) / cryptoDto.CryptoPrice) * 100M;
+                    if (cryptoDto.CryptoPrice != 0.0M && cryptoDto.CurrentPrice.HasValue)
+                        cryptoDto.CurrentDiffPercentage = (decimal)((cryptoDto.CurrentPrice - cryptoDto.CryptoPrice) / cryptoDto.CryptoPrice) * 100M;
 
-                    if ((cryptoDto.CurrentPrice >= cryptoDto.SellLimit) || (cryptoDto.CurrentPrice <= cryptoDto.StopLoss))
-                        cryptoDto.RecomendedAction = InvestActions.SELL;
-                    else
-                        cryptoDto.RecomendedAction = InvestActions.HOLD;
+                    if (cryptoDto.CurrentPrice.HasValue)
+                    {
+                        if ((cryptoDto.CurrentPrice >= cryptoDto.SellLimit) || (cryptoDto.CurrentPrice <= cryptoDto.StopLoss))
+                            cryptoDto.RecomendedAction = InvestActions.SELL;
+                        else
+                            cryptoDto.RecomendedAction = InvestActions.HOLD;
+                    }
                 }
 
                 cryptoCurrenciesDtos.Add(cryptoDto);

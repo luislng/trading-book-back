@@ -64,5 +64,10 @@ namespace TradingBook.Application.Services.Currency.Implementation
 
             return new ExchangeDto() { ExchangeRate = exchangeValue };
         }
+
+        public async Task<bool> CheckIfCurrencyCodeIsAvailable(string currencyCode)
+        {
+            return await _exchangeService.CheckIfCurrencyCodeExists(currencyCode);   
+        }
     }
 }

@@ -2,9 +2,11 @@
 {
     public record SaveCryptoDto
     {
-        public uint CryptoCurrencyReferenceFromId { get; set; }
+        public uint CurrencyFromId { get; set; }
         
-        public uint CryptoCurrencyReferenceToId { get; set; }
+        public uint CurrencyToId { get; set; }
+
+        public uint CryptoReferenceId { get; set; }
 
         public decimal AmountInvest { get; set; }
 

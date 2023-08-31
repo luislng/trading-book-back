@@ -11,12 +11,15 @@ namespace TradingBook.Application.Mapper
         protected override void CustomizeMap(IMappingExpression<CryptoCurrencyEntity, CryptoDto> mappingExpression)
         {
             mappingExpression.ForMember(x => x.CryptoCurrencyFrom,
-                                    y => y.MapFrom(cryptoRef => cryptoRef.CryptoCurrencyReferenceFrom == null ? String.Empty
-                                                                                                              : cryptoRef.CryptoCurrencyReferenceFrom.Name));
+                                    y => y.MapFrom(cryptoRef => cryptoRef.CurrencyFrom == null ? String.Empty
+                                                                                                              : cryptoRef.CurrencyFrom.Name));
 
             mappingExpression.ForMember(x => x.CryptoCurrencyTo,
-                                   y => y.MapFrom(cryptoRef => cryptoRef.CryptoCurrencyReferenceTo == null ? String.Empty
-                                                                                                           : cryptoRef.CryptoCurrencyReferenceTo.Name));
+                                   y => y.MapFrom(cryptoRef => cryptoRef.CurrencyTo == null ? String.Empty
+                                                                                                           : cryptoRef.CurrencyTo.Name));
+            mappingExpression.ForMember(x => x.CryptoReference,
+                                   y => y.MapFrom(cryptoRef => cryptoRef.CryptoReference == null ? String.Empty
+                                                                                                           : cryptoRef.CryptoReference.Name));
 
             mappingExpression.ForMember(x => x.BuyDate,
                                        y => y.MapFrom(cryptoRef => cryptoRef.BuyDate.ToString(DATE_FORMAT)));

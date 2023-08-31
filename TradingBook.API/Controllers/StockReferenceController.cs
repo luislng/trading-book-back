@@ -33,6 +33,13 @@ namespace TradingBook.API.Controllers
             }            
         }
 
+        [HttpGet("CheckIfStockExists")]
+        [ProducesResponseType(typeof(Boolean), StatusCodes.Status200OK)]
+        public async Task<IActionResult> CheckIfStockCodeExists([Required][FromQuery] string referenceCode)
+        {
+            return Ok(await _assetService.CheckIfStockExists(referenceCode));
+        }
+
         [HttpPost]
         [ProducesResponseType(typeof(List<StockReferenceDto>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
